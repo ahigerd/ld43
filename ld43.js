@@ -3,8 +3,7 @@
 const prefabs = {};
 
 assets.loadImageAssets({
-  hero: 'hero.png',
-  coin: 'coin.png',
+  hero: 'sprites.png',
   tileset: 'tileset.png',
 }).then(() => {
   prefabs.tilemap = {
@@ -36,33 +35,45 @@ assets.loadImageAssets({
   prefabs.hero = {
     animateHitboxes: false,
     defaultIsAnimating: true,
-    defaultAnimationName: 'right',
-    hitboxes: [new Hitbox(-.17, .05, .15, .48, 0xFFFFFFFF)],
+    defaultAnimationName: 'stand_down',
+    hitboxes: [new Hitbox(-.10, .05, .10, .48, 0xFFFFFFFF)],
     animations: {
-      left: new AnimationSequence([
-        new AnimationFrame(assets.hero, 16, 16, -16, 16),
-        new AnimationFrame(assets.hero, 32, 16, -16, 16),
-        new AnimationFrame(assets.hero, 48, 16, -16, 16),
-        new AnimationFrame(assets.hero, 64, 16, -16, 16),
-      ], 250.0),
-      right: new AnimationSequence([
+      down: new AnimationSequence([
         new AnimationFrame(assets.hero, 16, 16, 16, 16),
         new AnimationFrame(assets.hero, 32, 16, 16, 16),
+        new AnimationFrame(assets.hero, 16, 16, 16, 16),
         new AnimationFrame(assets.hero, 48, 16, 16, 16),
-        new AnimationFrame(assets.hero, 64, 16, 16, 16),
       ], 250.0),
-      runLeft: new AnimationSequence([
-        new AnimationFrame(assets.hero, 16, 32, -16, 16),
-        new AnimationFrame(assets.hero, 32, 32, -16, 16),
-        new AnimationFrame(assets.hero, 48, 32, -16, 16),
-        new AnimationFrame(assets.hero, 64, 32, -16, 16),
-      ], 125.0),
-      runRight: new AnimationSequence([
+      up: new AnimationSequence([
         new AnimationFrame(assets.hero, 16, 32, 16, 16),
         new AnimationFrame(assets.hero, 32, 32, 16, 16),
+        new AnimationFrame(assets.hero, 16, 32, 16, 16),
         new AnimationFrame(assets.hero, 48, 32, 16, 16),
-        new AnimationFrame(assets.hero, 64, 32, 16, 16),
-      ], 125.0),
+      ], 250.0),
+      left: new AnimationSequence([
+        new AnimationFrame(assets.hero, 16, 48, 16, 16),
+        new AnimationFrame(assets.hero, 32, 48, 16, 16),
+        new AnimationFrame(assets.hero, 16, 48, 16, 16),
+        new AnimationFrame(assets.hero, 48, 48, 16, 16),
+      ], 250.0),
+      right: new AnimationSequence([
+        new AnimationFrame(assets.hero, 16, 64, 16, 16),
+        new AnimationFrame(assets.hero, 32, 64, 16, 16),
+        new AnimationFrame(assets.hero, 16, 64, 16, 16),
+        new AnimationFrame(assets.hero, 48, 64, 16, 16),
+      ], 250.0),
+      stand_down: new AnimationSequence([
+        new AnimationFrame(assets.hero, 16, 16, 16, 16),
+      ], 250.0),
+      stand_up: new AnimationSequence([
+        new AnimationFrame(assets.hero, 16, 32, 16, 16),
+      ], 250.0),
+      stand_left: new AnimationSequence([
+        new AnimationFrame(assets.hero, 16, 48, 16, 16),
+      ], 250.0),
+      stand_right: new AnimationSequence([
+        new AnimationFrame(assets.hero, 16, 64, 16, 16),
+      ], 250.0),
     },
 
     /*
@@ -83,8 +94,7 @@ assets.loadImageAssets({
     */
 
     start() {
-      this.index = ' ';
-      this.isGrounded = true;
+      this.lastDir = 'down';
     },
 
     update(scene, ms) {
@@ -93,16 +103,20 @@ assets.loadImageAssets({
       if (Input.keys.ArrowRight) dx++;
       if (Input.keys.ArrowUp) dy--;
       if (Input.keys.ArrowDown) dy++;
-      if (dx < 0) {
-        this.setAnimation('runLeft');
-        this.faceLeft = true;
+      if (dy < 0) {
+        this.setAnimation('up');
+        this.lastDir = 'up';
+      } else if (dy > 0) {
+        this.setAnimation('down');
+        this.lastDir = 'down';
+      } else if (dx < 0) {
+        this.setAnimation('left');
+        this.lastDir = 'left';
       } else if (dx > 0) {
-        this.setAnimation('runRight');
-        this.faceLeft = false;
-      } else if (dy != 0) {
-        this.setAnimation(this.faceLeft ? 'runLeft' : 'runRight');
+        this.setAnimation('right');
+        this.lastDir = 'right';
       } else {
-        this.setAnimation(this.faceLeft ? 'left' : 'right');
+        this.setAnimation('stand_' + this.lastDir);
       }
       if (dx || dy) {
         ms /= 500;
@@ -121,6 +135,19 @@ assets.loadImageAssets({
           }
         }
         this.move(dx, dy);
+      }
+      if (dy < 0 && !dx) {
+        this.setAnimation('up');
+        this.lastDir = 'up';
+      } else if (dy > 0 && !dx) {
+        this.setAnimation('down');
+        this.lastDir = 'down';
+      } else if (dx < 0 && !dy) {
+        this.setAnimation('left');
+        this.lastDir = 'left';
+      } else if (dx > 0 && !dy) {
+        this.setAnimation('right');
+        this.lastDir = 'right';
       }
     },
   };
