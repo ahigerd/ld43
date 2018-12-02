@@ -67,83 +67,63 @@ const CARDINAL_MATCH = {
   0x58: 11, // dirt t
 };
 
-for (let i = 0; i < 10; i++) {
-  let w = (Math.random(16) * 16) | 0;
-  let h = (Math.random(16) * 16) | 0;
-  let x = (Math.random(64 - w) * (64 - w)) | 0;
-  let y = (Math.random(64 - h) * (64 - h)) | 0;
-  if (i == 0) {
-    h = 5;
-    w = 5;
-    y = 20;
-    x = 20;
-  } else if (i == 1) {
-    h = 5;
-    w = 5;
-    y = 24;
-    x = 24;
-  } else if (i == 2) {
-    h = 5;
-    w = 1;
-    y = 15;
-    x = 15;
-  }
-  for (let sy = y; sy < y + h; sy++) {
-    for (let sx = x; sx < x + w; sx++) {
-      tilemap.tiles[sy * 64 + sx] = 14;
+return assets.require('scripts/NoiseField.js').then(([NoiseField]) => {
+  const field = new NoiseField(Math.random(), 2, 16);
+  for (let sy = 0; sy < 64; sy++) {
+    for (let sx = 0; sx < 64; sx++) {
+      tilemap.tiles[sy * 64 + sx] = field.valueAt(sx, sy) > 0 ? 14 : 0;
     }
   }
-}
 
-for (let y = 1; y < 63; y++) {
-  for (let x = 1; x < 63; x++) {
-    const p = y * 64 + x;
-    const t = tilemap.tiles[p];
-    if (t != 14) continue;
-    // neighbors
-    const n = (
-      (tilemap.tiles[p - 65] && 0x01) |
-      (tilemap.tiles[p - 64] && 0x02) |
-      (tilemap.tiles[p - 63] && 0x04) |
-      (tilemap.tiles[p - 1]  && 0x08) |
-      (tilemap.tiles[p + 1]  && 0x10) |
-      (tilemap.tiles[p + 63] && 0x20) |
-      (tilemap.tiles[p + 64] && 0x40) |
-      (tilemap.tiles[p + 65] && 0x80)
-    );
-    // cardinal neighbors
-    const c = n & 0x5a;
-    tilemap.tiles[p] = (n & 0xa5 ? 0 : TEE_MATCH[c]) || CARDINAL_MATCH[c] || 14;
-  }
-}
-
-for (let y = 30; y < 35; y++) {
-  for (let x = 30; x < 35; x++) {
-    const pos = y * 64 + x;
-    if (x == 30) {
-      if (y == 30)
-        tilemap.tiles[pos] = 1;
-      else if (y == 34) 
-        tilemap.tiles[pos] = 7;
-      else
-        tilemap.tiles[pos] = 4;
-    } else if (x == 34) {
-      if (y == 30)
-        tilemap.tiles[pos] = 3;
-      else if (y == 34) 
-        tilemap.tiles[pos] = 9;
-      else
-        tilemap.tiles[pos] = 6;
-    } else {
-      if (y == 30)
-        tilemap.tiles[pos] = 2;
-      else if (y == 34) 
-        tilemap.tiles[pos] = 8;
-      else
-        tilemap.tiles[pos] = 5;
+  for (let y = 1; y < 63; y++) {
+    for (let x = 1; x < 63; x++) {
+      const p = y * 64 + x;
+      const t = tilemap.tiles[p];
+      if (t != 14) continue;
+      // neighbors
+      const n = (
+        (tilemap.tiles[p - 65] && 0x01) |
+        (tilemap.tiles[p - 64] && 0x02) |
+        (tilemap.tiles[p - 63] && 0x04) |
+        (tilemap.tiles[p - 1]  && 0x08) |
+        (tilemap.tiles[p + 1]  && 0x10) |
+        (tilemap.tiles[p + 63] && 0x20) |
+        (tilemap.tiles[p + 64] && 0x40) |
+        (tilemap.tiles[p + 65] && 0x80)
+      );
+      // cardinal neighbors
+      const c = n & 0x5a;
+      tilemap.tiles[p] = (n & 0xa5 ? 0 : TEE_MATCH[c]) || CARDINAL_MATCH[c] || 14;
     }
   }
-}
 
+  for (let y = 30; y < 35; y++) {
+    for (let x = 30; x < 35; x++) {
+      const pos = y * 64 + x;
+      if (x == 30) {
+        if (y == 30)
+          tilemap.tiles[pos] = 1;
+        else if (y == 34) 
+          tilemap.tiles[pos] = 7;
+        else
+          tilemap.tiles[pos] = 4;
+      } else if (x == 34) {
+        if (y == 30)
+          tilemap.tiles[pos] = 3;
+        else if (y == 34) 
+          tilemap.tiles[pos] = 9;
+        else
+          tilemap.tiles[pos] = 6;
+      } else {
+        if (y == 30)
+          tilemap.tiles[pos] = 2;
+        else if (y == 34) 
+          tilemap.tiles[pos] = 8;
+        else
+          tilemap.tiles[pos] = 5;
+      }
+    }
+  }
 
-return tilemap;
+  return tilemap;
+});

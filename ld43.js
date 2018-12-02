@@ -3,8 +3,8 @@
 function spawnTooClose(x, y, scene) {
   for (const obj of scene.nextObjects) {
     if (obj.isTileMap) continue;
-    const dx2 = (x/PIXELS_PER_UNIT - obj._origin[0]) ** 2;
-    const dy2 = (y/PIXELS_PER_UNIT - obj._origin[1]) ** 2;
+    const dx2 = Math.sqrt(x/PIXELS_PER_UNIT - obj._origin[0]);
+    const dy2 = Math.sqrt(y/PIXELS_PER_UNIT - obj._origin[1]);
     if (dx2 + dy2 < 1) return true;
   }
   return false;

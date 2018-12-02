@@ -11,6 +11,7 @@ class TileMap extends Sprite {
     config.hitboxes = config.hitboxes || [new Hitbox(0, 0, config.width, config.height)];
     super(config, origin);
     this.isTileMap = true;
+    this.isPassive = true;
     this.width = config.width | 0;
     this.height = config.height | 0;
     this.tileSize = (config.tileSize || PIXELS_PER_UNIT) | 0;
