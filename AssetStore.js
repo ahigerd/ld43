@@ -66,4 +66,9 @@ class AssetStore {
     });
     return this.prefabs[key];
   }
+
+  load(assets) {
+    return this.loadImageAssets(assets.images)
+      .then(() => this.loadPrefabAssets(assets.prefabs));
+  }
 }

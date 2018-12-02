@@ -1,14 +1,15 @@
 "use strict";
 
-assets.loadImageAssets({
-  sprites: 'assets/sprites.png',
-  tileset: 'assets/tileset.png',
-}).then(() => 
-  assets.loadPrefabAssets({
+assets.load({
+  images: {
+    sprites: 'assets/sprites.png',
+    tileset: 'assets/tileset.png',
+  },
+  prefabs: {
     hero: 'prefabs/hero.js',
     tilemap: 'prefabs/tilemap.js',
     worshiper: 'prefabs/worshiper.js',
-  })
+  },
 ).then(() => {
   window.tilemap = new TileMap(assets.prefabs.tilemap, [0, -2]);
   scene.add(window.tilemap);
