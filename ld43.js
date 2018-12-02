@@ -10,7 +10,7 @@ assets.load({
     tilemap: 'prefabs/tilemap.js',
     worshiper: 'prefabs/worshiper.js',
   },
-).then(() => {
+}).then(() => {
   window.tilemap = new TileMap(assets.prefabs.tilemap, [0, -2]);
   scene.add(window.tilemap);
 
@@ -28,7 +28,6 @@ assets.load({
 
   window.hero = new Sprite(assets.prefabs.hero, [.75, -1]);
   scene.add(window.hero);
-
 
   camera.setScale(2, 2);
   camera.setXY(0, 0);

@@ -34,10 +34,11 @@ class AssetStore {
   constructor() {
     this.images = {};
     this.prefabs = {};
+    this.data = {};
   }
 
   loadImageAssets(assets) {
-    return Promise.all(Object.keys(assets).map(key => this.loadImageAsset(key, assets[key]))).then(() => this);
+    return Promise.all(Object.keys(assets || {}).map(key => this.loadImageAsset(key, assets[key]))).then(() => this);
   }
 
   loadImageAsset(key, url) {
@@ -54,7 +55,7 @@ class AssetStore {
   }
 
   loadPrefabAssets(assets) {
-    return Promise.all(Object.keys(assets).map(key => this.loadPrefabAsset(key, assets[key]))).then(() => this);
+    return Promise.all(Object.keys(assets || {}).map(key => this.loadPrefabAsset(key, assets[key]))).then(() => this);
   }
 
   loadPrefabAsset(key, url) {
@@ -67,8 +68,23 @@ class AssetStore {
     return this.prefabs[key];
   }
 
+  loadDataAssets(assets) {
+    return Promise.all(Object.keys(assets || {}).map(key => this.loadDataAsset(key, assets[key]))).then(() => this);
+  }
+
+  loadDataAsset(key, url) {
+    if (this.data[key]) {
+      return Promise.resolve(this.data[key]);
+    }
+    this.data[key] = fetch(url).then(response => response.text()).then(text => {
+      return this.data[key] = text;
+    });
+    return this.data[key];
+  }
+
   load(assets) {
     return this.loadImageAssets(assets.images)
-      .then(() => this.loadPrefabAssets(assets.prefabs));
+      .then(() => this.loadPrefabAssets(assets.prefabs))
+      .then(() => this.loadDataAssets(assets.data));
   }
 }
