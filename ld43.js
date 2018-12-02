@@ -103,20 +103,15 @@ assets.loadImageAssets({
       if (Input.keys.ArrowRight) dx++;
       if (Input.keys.ArrowUp) dy--;
       if (Input.keys.ArrowDown) dy++;
+      const moving = dx || dy;
       if (dy < 0) {
-        this.setAnimation('up');
         this.lastDir = 'up';
       } else if (dy > 0) {
-        this.setAnimation('down');
         this.lastDir = 'down';
       } else if (dx < 0) {
-        this.setAnimation('left');
         this.lastDir = 'left';
       } else if (dx > 0) {
-        this.setAnimation('right');
         this.lastDir = 'right';
-      } else {
-        this.setAnimation('stand_' + this.lastDir);
       }
       if (dx || dy) {
         ms /= 500;
@@ -135,19 +130,20 @@ assets.loadImageAssets({
           }
         }
         this.move(dx, dy);
+        if (dy < 0 && !dx) {
+          this.lastDir = 'up';
+        } else if (dy > 0 && !dx) {
+          this.lastDir = 'down';
+        } else if (dx < 0 && !dy) {
+          this.lastDir = 'left';
+        } else if (dx > 0 && !dy) {
+          this.lastDir = 'right';
+        }
       }
-      if (dy < 0 && !dx) {
-        this.setAnimation('up');
-        this.lastDir = 'up';
-      } else if (dy > 0 && !dx) {
-        this.setAnimation('down');
-        this.lastDir = 'down';
-      } else if (dx < 0 && !dy) {
-        this.setAnimation('left');
-        this.lastDir = 'left';
-      } else if (dx > 0 && !dy) {
-        this.setAnimation('right');
-        this.lastDir = 'right';
+      if (moving) {
+        this.setAnimation(this.lastDir);
+      } else {
+        this.setAnimation('stand_' + this.lastDir);
       }
     },
   };
