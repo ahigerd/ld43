@@ -1,5 +1,9 @@
 "use strict";
 
+function sortObjectsByDepth(lhs, rhs) {
+  return (lhs.layer - rhs.layer) || (lhs._origin[1] - rhs._origin[1]);
+}
+
 return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
   label: 'hero',
   animateHitboxes: false,
@@ -77,5 +81,9 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
     if (moved) {
       CharacterCore.centerCameraOn(this);
     }
+  },
+
+  lateUpdate(scene) {
+    scene.objects.sort(sortObjectsByDepth);
   },
 }));

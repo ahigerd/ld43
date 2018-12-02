@@ -134,7 +134,7 @@ class Sprite {
     this.isTrigger = config.isTrigger || false;
     this.isPassive = config.isPassive || false;
 
-    for (const method of ['update', 'start', 'onCollisionEnter', 'onCollisionStay', 'onCollisionExit', 'render']) {
+    for (const method of ['update', 'start', 'lateUpdate', 'onCollisionEnter', 'onCollisionStay', 'onCollisionExit', 'render']) {
       if (config[method]) {
         this[method] = config[method];
       }
@@ -275,6 +275,12 @@ class Sprite {
   }
 
   /*
+  lateUpdate(scene) {
+    // By default, sprites have no late update behavior.
+    // Subclasses may override this.
+    // Note that moving colliders during lateUpdate may cause unpredictable behavior.
+  }
+
   onCollisionEnter(other) {
     // By default, sprites have no collision behavior.
     // Subclasses may override this.

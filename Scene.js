@@ -83,6 +83,9 @@ class Scene {
       after = null;
     } else {
       sprite.computeBoxes();
+      if (sprite.lateUpdate) {
+        sprite.lateUpdate(this);
+      }
       after = sprite.lastAabb;
     }
     if (Rect.equal(before, after)) {

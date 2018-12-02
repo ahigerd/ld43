@@ -20,9 +20,9 @@ assets.load({
     const worshiper = new Sprite(assets.prefabs.worshiper, [0, 0]);
     window.worshipers.push(worshiper);
     do {
-      const x = Math.random() * 10 - 5;
-      const y = Math.random() * 10 - 5;
-      worshiper._origin.setXY(x, y);
+      const x = (Math.random() * 320 - 160) | 0;
+      const y = (Math.random() * 320 - 160) | 0;
+      worshiper._origin.setXY(x / 32, y / 32);
     } while (tilemap.computeCollision(worshiper, true));
     scene.add(worshiper);
   }
@@ -34,9 +34,9 @@ assets.load({
     coin.setAnimation(coinValues[(coinValues.length * Math.random()) | 0]);
     window.coins.push(coin);
     do {
-      const x = Math.random() * 10 - 5;
-      const y = Math.random() * 10 - 5;
-      coin._origin.setXY(x, y);
+      const x = (Math.random() * 320 - 160) | 0;
+      const y = (Math.random() * 320 - 160) | 0;
+      coin._origin.setXY(x / 32, y / 32);
     } while (tilemap.computeCollision(coin, true));
     scene.add(coin);
   }
