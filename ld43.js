@@ -1,5 +1,15 @@
 "use strict";
 
+function spawnTooClose(x, y, scene) {
+  for (const obj of scene.nextObjects) {
+    if (obj.isTileMap) continue;
+    const dx2 = (x/PIXELS_PER_UNIT - obj._origin[0]) ** 2;
+    const dy2 = (y/PIXELS_PER_UNIT - obj._origin[1]) ** 2;
+    if (dx2 + dy2 < 1) return true;
+  }
+  return false;
+}
+
 assets.load({
   images: {
     sprites: 'assets/sprites.png',
@@ -16,15 +26,22 @@ assets.load({
   window.tilemap = new TileMap(assets.prefabs.tilemap, [-16, -16]);
   scene.add(window.tilemap);
 
+  window.altar = new Sprite(assets.prefabs.altar, [.25, 0]);
+  scene.add(window.altar);
+
+  window.hero = new Sprite(assets.prefabs.hero, [.25, 1]);
+  scene.add(window.hero);
+
+  let x, y;
   window.worshipers = [];
   for (let i = 0; i < 10; i++) {
     const worshiper = new Sprite(assets.prefabs.worshiper, [0, 0]);
     window.worshipers.push(worshiper);
     do {
-      const x = (Math.random() * 320 - 160) | 0;
-      const y = (Math.random() * 320 - 160) | 0;
+      x = (Math.random() * 320 - 160) | 0;
+      y = (Math.random() * 320 - 160) | 0;
       worshiper._origin.setXY(x / 32, y / 32);
-    } while (tilemap.computeCollision(worshiper, true));
+    } while (tilemap.computeCollision(worshiper, true) || spawnTooClose(x, y, scene));
     scene.add(worshiper);
   }
 
@@ -35,18 +52,12 @@ assets.load({
     coin.setAnimation(coinValues[(coinValues.length * Math.random()) | 0]);
     window.coins.push(coin);
     do {
-      const x = (Math.random() * 320 - 160) | 0;
-      const y = (Math.random() * 320 - 160) | 0;
+      x = (Math.random() * 320 - 160) | 0;
+      y = (Math.random() * 320 - 160) | 0;
       coin._origin.setXY(x / 32, y / 32);
-    } while (tilemap.computeCollision(coin, true));
+    } while (tilemap.computeCollision(coin, true) || spawnTooClose(x, y, scene));
     scene.add(coin);
   }
-
-  window.altar = new Sprite(assets.prefabs.altar, [.25, 0]);
-  scene.add(window.altar);
-
-  window.hero = new Sprite(assets.prefabs.hero, [.25, 1]);
-  scene.add(window.hero);
 
   camera.setScale(2, 2);
 
