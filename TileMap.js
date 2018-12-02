@@ -183,7 +183,7 @@ class TileMap extends Sprite {
       chunkData.valid = true;
       chunkData.context.clearRect(0, 0, chunkData.width * this.tileSize, chunkData.height * this.tileSize);
       for (let y = 0; y < chunkData.height; y++) {
-        const tileRow = y * this.width + chunkX * this.hChunkSize;
+        const tileRow = (chunkY * this.vChunkSize + y) * this.width + chunkX * this.hChunkSize;
         const pixelRow = y * this.tileSize;
         for (let x = 0; x < chunkData.width; x++) {
           const tileType = this.tileTypes[this.tiles[tileRow + x]];
