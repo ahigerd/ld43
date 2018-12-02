@@ -32,8 +32,26 @@ const tilemap = {
     { x: 3, y: 2, bits: 0 }, // dirt tee up
     { x: 4, y: 1, bits: 0 }, // dirt tee left
     { x: 4, y: 2, bits: 0 }, // dirt tee right
-    { x: 0, y: 4, bits: 0 }, // dirt /
-    { x: 0, y: 5, bits: 0 }, // dirt \
+    { x: 0, y: 4, bits: 1 }, // water TL
+    { x: 1, y: 4, bits: 1 }, // water T
+    { x: 2, y: 4, bits: 1 }, // water TR
+    { x: 0, y: 5, bits: 1 }, // water L
+    { x: 1, y: 5, bits: 1 }, // water 
+    { x: 2, y: 5, bits: 1 }, // water R
+    { x: 0, y: 6, bits: 1 }, // water BL
+    { x: 1, y: 6, bits: 1 }, // water B
+    { x: 2, y: 6, bits: 1 }, // water BR
+    { x: 1, y: 7, bits: 1 }, // water H
+    { x: 4, y: 4, bits: 1 }, // water V
+    { x: 2, y: 7, bits: 0 }, // water cap L
+    { x: 4, y: 3, bits: 0 }, // water cap T
+    { x: 0, y: 7, bits: 0 }, // water cap R
+    { x: 4, y: 5, bits: 0 }, // water cap B
+    { x: 1, y: 1, bits: 0 }, // water spot
+    { x: 3, y: 6, bits: 1 }, // water tee down
+    { x: 3, y: 7, bits: 1 }, // water tee up
+    { x: 4, y: 6, bits: 1 }, // water tee left
+    { x: 4, y: 7, bits: 1 }, // water tee right
     { blank: true, bits: 0xFFFFFFFF }, // map boundary
   ],
   tiles: new Array(64*64).fill(0),
@@ -42,6 +60,8 @@ const tilemap = {
   height: 64,
   image: assets.images.tileset,
 };
+
+const WATER_OFFSET = 20;
 
 const TEE_MATCH = {
   0x1a: 27, // dirt b
@@ -68,33 +88,69 @@ const CARDINAL_MATCH = {
   0x58: 11, // dirt t
 };
 
+function tileMatch(p, t, v) {
+  if (t >= 30) 
+    return (tilemap.tiles[p] && tilemap.tiles[p] >= 30) ? v : 0;
+  return tilemap.tiles[p] && v;
+}
+
 return assets.require('scripts/NoiseField.js').then(([NoiseField]) => {
   const field = new NoiseField(Math.random(), 2, 16);
   for (let sy = 0; sy < 64; sy++) {
     for (let sx = 0; sx < 64; sx++) {
-      tilemap.tiles[sy * 64 + sx] = field.valueAt(sx, sy) > 0 ? 14 : 0;
+      let center = 30 - ((sx - 32) * (sx - 32) + (sy - 32) * (sy - 32));
+      if (center < 0) center = 0;
+      const edge = (
+        (sx < 8 ? 9 - sx : (sx > 55 ? sx - 55 : 0)) +
+        (sy < 8 ? 9 - sy : (sy > 55 ? sy - 55 : 0))
+      );
+      const v = field.valueAt(sx, sy) - edge * 3 + center;
+      if (v > -1) 
+        tilemap.tiles[sy * 64 + sx] = 0;
+      else if (v > -11)
+        tilemap.tiles[sy * 64 + sx] = 14;
+      else
+        tilemap.tiles[sy * 64 + sx] = 34;
     }
+  }
+
+  for (let sy = 1; sy < 63; sy++) {
+    for (let sx = 1; sx < 63; sx++) {
+      const p = sy * 64 + sx;
+      if (tilemap.tiles[p] != 34) continue;
+      if (tilemap.tiles[p - 1] == 0) tilemap.tiles[p - 1] = 14;
+      if (tilemap.tiles[p + 1] == 0) tilemap.tiles[p + 1] = 14;
+      if (tilemap.tiles[p - 64] == 0) tilemap.tiles[p - 64] = 14;
+      if (tilemap.tiles[p + 64] == 0) tilemap.tiles[p + 64] = 14;
+    }
+  }
+
+  for (let i = 0; i < 64; i++) {
+    tilemap.tiles[i * 64] = 34;
+    tilemap.tiles[i * 64 + 63] = 34;
+    tilemap.tiles[i] = 34;
+    tilemap.tiles[4032 + i] = 34;
   }
 
   for (let y = 1; y < 63; y++) {
     for (let x = 1; x < 63; x++) {
       const p = y * 64 + x;
       const t = tilemap.tiles[p];
-      if (t != 14) continue;
+      if (t == 0) continue;
       // neighbors
       const n = (
-        (tilemap.tiles[p - 65] && 0x01) |
-        (tilemap.tiles[p - 64] && 0x02) |
-        (tilemap.tiles[p - 63] && 0x04) |
-        (tilemap.tiles[p - 1]  && 0x08) |
-        (tilemap.tiles[p + 1]  && 0x10) |
-        (tilemap.tiles[p + 63] && 0x20) |
-        (tilemap.tiles[p + 64] && 0x40) |
-        (tilemap.tiles[p + 65] && 0x80)
+        tileMatch(p - 65, t, 0x01) |
+        tileMatch(p - 64, t, 0x02) |
+        tileMatch(p - 63, t, 0x04) |
+        tileMatch(p - 1,  t, 0x08) |
+        tileMatch(p + 1,  t, 0x10) |
+        tileMatch(p + 63, t, 0x20) |
+        tileMatch(p + 64, t, 0x40) |
+        tileMatch(p + 65, t, 0x80) 
       );
       // cardinal neighbors
       const c = n & 0x5a;
-      tilemap.tiles[p] = (n & 0xa5 ? 0 : TEE_MATCH[c]) || CARDINAL_MATCH[c] || 14;
+      tilemap.tiles[p] = ((n & 0xa5 ? 0 : TEE_MATCH[c]) || CARDINAL_MATCH[c] || 14) + (t >= 30 ? WATER_OFFSET : 0);
     }
   }
 
@@ -124,13 +180,6 @@ return assets.require('scripts/NoiseField.js').then(([NoiseField]) => {
           tilemap.tiles[pos] = 5;
       }
     }
-  }
-
-  for (let i = 0; i < 64; i++) {
-    tilemap.tiles[i * 64] = tilemap.tileTypes.length - 1;
-    tilemap.tiles[i * 64 + 63] = tilemap.tileTypes.length - 1;
-    tilemap.tiles[i] = tilemap.tileTypes.length - 1;
-    tilemap.tiles[4032 + i] = tilemap.tileTypes.length - 1;
   }
 
   return tilemap;

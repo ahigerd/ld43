@@ -54,8 +54,8 @@ return {
 
   centerCameraOn(sprite) {
     const camera = engine.cameras[0];
-    const halfWidth = camera.width * .5 + .5;
-    const halfHeight = camera.height * .5 + .5;
+    const halfWidth = camera.width * .5;
+    const halfHeight = camera.height * .5;
     let x = ((sprite._origin[0] * PIXELS_PER_UNIT) | 0) / PIXELS_PER_UNIT;
     let y = ((sprite._origin[1] * PIXELS_PER_UNIT) | 0) / PIXELS_PER_UNIT;
     if (x - halfWidth < window.tilemap.lastAabb[0]) {
