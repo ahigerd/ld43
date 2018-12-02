@@ -53,9 +53,21 @@ return {
   },
 
   centerCameraOn(sprite) {
-    engine.cameras[0].setXY(
-      ((sprite._origin[0] * PIXELS_PER_UNIT) | 0) / PIXELS_PER_UNIT,
-      ((sprite._origin[1] * PIXELS_PER_UNIT) | 0) / PIXELS_PER_UNIT,
-    );
+    const camera = engine.cameras[0];
+    const halfWidth = camera.width * .5 + .5;
+    const halfHeight = camera.height * .5 + .5;
+    let x = ((sprite._origin[0] * PIXELS_PER_UNIT) | 0) / PIXELS_PER_UNIT;
+    let y = ((sprite._origin[1] * PIXELS_PER_UNIT) | 0) / PIXELS_PER_UNIT;
+    if (x - halfWidth < window.tilemap.lastAabb[0]) {
+      x = window.tilemap.lastAabb[0] + halfWidth;
+    } else if (x + halfWidth > window.tilemap.lastAabb[2]) {
+      x = window.tilemap.lastAabb[2] - halfWidth;
+    }
+    if (y - halfHeight < window.tilemap.lastAabb[1]) {
+      y = window.tilemap.lastAabb[1] + halfHeight;
+    } else if (y + halfHeight > window.tilemap.lastAabb[3]) {
+      y = window.tilemap.lastAabb[3] - halfHeight;
+    }
+    engine.cameras[0].setXY(x, y);
   },
 }

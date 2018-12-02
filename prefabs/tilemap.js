@@ -34,6 +34,7 @@ const tilemap = {
     { x: 4, y: 2, bits: 0 }, // dirt tee right
     { x: 0, y: 4, bits: 0 }, // dirt /
     { x: 0, y: 5, bits: 0 }, // dirt \
+    { blank: true, bits: 0xFFFFFFFF }, // map boundary
   ],
   tiles: new Array(64*64).fill(0),
   tileSize: 16,
@@ -123,6 +124,13 @@ return assets.require('scripts/NoiseField.js').then(([NoiseField]) => {
           tilemap.tiles[pos] = 5;
       }
     }
+  }
+
+  for (let i = 0; i < 64; i++) {
+    tilemap.tiles[i * 64] = tilemap.tileTypes.length - 1;
+    tilemap.tiles[i * 64 + 63] = tilemap.tileTypes.length - 1;
+    tilemap.tiles[i] = tilemap.tileTypes.length - 1;
+    tilemap.tiles[4032 + i] = tilemap.tileTypes.length - 1;
   }
 
   return tilemap;
