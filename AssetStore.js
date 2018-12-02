@@ -35,6 +35,7 @@ class AssetStore {
     this.images = {};
     this.prefabs = {};
     this.data = {};
+    this.modules = {};
   }
 
   loadImageAssets(assets) {
@@ -47,7 +48,7 @@ class AssetStore {
     }
     const element = document.createElement('IMG');
     element.style.display = 'none';
-    return new Promise((resolve, reject) => {
+    return this.images[key] = new Promise((resolve, reject) => {
       element.addEventListener('load', () => resolve(this.images[key] = element));
       element.addEventListener('error', e => reject(e));
       element.src = url;
@@ -62,10 +63,10 @@ class AssetStore {
     if (this.prefabs[key]) {
       return Promise.resolve(this.prefabs[key]);
     }
-    this.prefabs[key] = fetch(url).then(response => response.text()).then(js => {
-      return this.prefabs[key] = (new Function('assets', js))(this);
-    });
-    return this.prefabs[key];
+    return this.prefabs[key] = fetch(url)
+      .then(response => response.text())
+      .then(js => new Function('assets', js)(this))
+      .then(prefab => this.prefabs[key] = prefab);
   }
 
   loadDataAssets(assets) {
@@ -76,15 +77,27 @@ class AssetStore {
     if (this.data[key]) {
       return Promise.resolve(this.data[key]);
     }
-    this.data[key] = fetch(url).then(response => response.text()).then(text => {
-      return this.data[key] = text;
-    });
-    return this.data[key];
+    return this.data[key] = fetch(url)
+      .then(response => response.text())
+      .then(data => this.data[key] = data);
   }
 
   load(assets) {
     return this.loadImageAssets(assets.images)
       .then(() => this.loadPrefabAssets(assets.prefabs))
       .then(() => this.loadDataAssets(assets.data));
+  }
+
+  require(...urls) {
+    return Promise.all(urls.map(url => {
+      if (this.modules[url]) {
+        return this.modules[url];
+      }
+      const module = {};
+      return this.modules[url] = fetch(url)
+        .then(response => response.text())
+        .then(js => new Function('assets', js).call(module, this))
+        .then(() => module);
+    }));
   }
 }

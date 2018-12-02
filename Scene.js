@@ -13,6 +13,7 @@ class Scene {
   add(sprite) {
     this.nextObjects.push(sprite);
     this.postUpdate(sprite);
+    sprite.scene = this;
     sprite.start(this);
   }
 
@@ -135,8 +136,10 @@ class Scene {
     let minX, minY, maxX, maxY, bucket, x, y, sprite, other;
     // Broad phase: figure out which objects are close enough to each other that they might collide
     for (sprite of this.objects) {
-      // Sleeping sprites don't collide with anything, and tilemap collisions are asymmetrical
-      if (sprite.isAsleep || sprite.isTileMap) {
+      // Sleeping sprites don't collide with anything
+      // Tilemap collisions are asymmetrical
+      // Passive sprites don't collide, but can be collided with
+      if (sprite.isAsleep || sprite.isTileMap || sprite.isPassive) {
         continue;
       }
       // While this loop is structurally identical to updateBucketRange, writing this loop inline

@@ -124,6 +124,7 @@ class AnimationSequence {
  */
 class Sprite {
   constructor(config = {}, origin = null) {
+    this.label = config.label || null;
     this._origin = new Point(origin || config.origin || [0, 0]);
     this._hitboxes = config.animateHitboxes ? null : (config.hitboxes || [new Hitbox(-.5, -.5, .5, .5)]);
     this.currentAnimationName = config.defaultAnimationName || 'default';
@@ -131,6 +132,7 @@ class Sprite {
     this.animateHitboxes = config.animateHitboxes || false;
     this.layer = config.layer || 0;
     this.isTrigger = config.isTrigger || false;
+    this.isPassive = config.isPassive || false;
 
     for (const method of ['update', 'start', 'onCollisionEnter', 'onCollisionStay', 'onCollisionExit', 'render']) {
       if (config[method]) {
@@ -146,6 +148,7 @@ class Sprite {
     this.isAnimating = config.defaultIsAnimating;
     this.animationTime = 0;
     this.oneShotName = null;
+    this.scene = null;
 
     // An array is 25% faster than a Set here.
     // this._coarseCollisions = [];

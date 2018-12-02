@@ -1,6 +1,7 @@
 "use strict";
 
 return {
+  label: 'worshiper',
   animateHitboxes: false,
   defaultIsAnimating: true,
   defaultAnimationName: 'stand_down',
@@ -43,23 +44,6 @@ return {
       new AnimationFrame(assets.images.sprites, 64, 64, 16, 16),
     ], 250.0),
   },
-
-  /*
-  render(camera) {
-    Sprite.prototype.render.call(this, camera);
-    const rect = this.hitbox.translated(this.origin);
-    const layer = camera.layers[this.layer];
-    layer.strokeStyle = 'black';
-    layer.beginPath();
-    layer.rect(
-      (PIXELS_PER_UNIT * rect[0]) - .5,
-      (PIXELS_PER_UNIT * rect[1]) - .5,
-      (PIXELS_PER_UNIT * (rect[2] - rect[0])),
-      (PIXELS_PER_UNIT * (rect[1] - rect[3])),
-    );
-    layer.stroke();
-  },
-  */
 
   start() {
     this.lastDir = 'down';
