@@ -45,7 +45,6 @@ assets.load({
   scene.add(window.hero);
 
   camera.setScale(2, 2);
-  camera.setXY(0, 0);
 
   window.coords = document.createElement('PRE');
   window.coords.setAttribute('style', 'position: absolute; top: 0; left: 650px');

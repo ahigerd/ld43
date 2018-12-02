@@ -64,6 +64,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
 
   start() {
     this.lastDir = 'down';
+    CharacterCore.centerCameraOn(this);
   },
 
   update(scene, ms) {
@@ -72,6 +73,9 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
     if (Input.keys.ArrowRight) dx++;
     if (Input.keys.ArrowUp) dy--;
     if (Input.keys.ArrowDown) dy++;
-    CharacterCore.move(this, ms, dx, dy);
+    const moved = CharacterCore.move(this, ms, dx, dy);
+    if (moved) {
+      CharacterCore.centerCameraOn(this);
+    }
   },
 }));
