@@ -52,7 +52,15 @@ const tilemap = {
     { x: 3, y: 7, bits: 1 }, // water tee up
     { x: 4, y: 6, bits: 1 }, // water tee left
     { x: 4, y: 7, bits: 1 }, // water tee right
-    { blank: true, bits: 0xFFFFFFFF }, // map boundary
+    { x: 5, y: 3, bits: 0 }, // mine TL
+    { x: 6, y: 3, bits: 0 }, // mine T
+    { x: 7, y: 3, bits: 0 }, // mine TR
+    { x: 5, y: 4, bits: 0 }, // mine L
+    { x: 6, y: 4, bits: 6 }, // mine
+    { x: 7, y: 4, bits: 0 }, // mine R
+    { x: 5, y: 5, bits: 0 }, // mine BL
+    { x: 6, y: 5, bits: 0 }, // mine B
+    { x: 7, y: 5, bits: 0 }, // mine BR
   ],
   tiles: new Uint8Array(64 * 64).fill(0),
   tileSize: 16,
@@ -210,6 +218,38 @@ return assets.require('scripts/NoiseField.js').then(([NoiseField]) => {
           tilemap.tiles[pos] = 8;
         else
           tilemap.tiles[pos] = 5;
+      }
+    }
+  }
+
+  // Scatter mines around the map
+  for (let y = 0; y < 63; y += 16) {
+    for (let x = 0; x < 63; x += 16) {
+      let ok = false;
+      let sx, sy;
+      for (let retry = 0; !ok && retry < 4; retry++) {
+        ok = true;
+        sx = (Math.random() * 13 + x + 1) | 0;
+        sy = (Math.random() * 13 + y + 1) | 0;
+        for (let cy = sy - 1; ok && cy <= sy + 1; cy++) {
+          for (let cx = sx - 1; ok && cx <= sx + 1; cx++) {
+            const t = tilemap.tiles[cy * 64 + cx];
+            if (t != 0 && (t < 10 || t >= 30)) {
+              ok = false;
+            }
+          }
+        }
+      }
+      if (ok) {
+        tilemap.tiles[sy * 64 + sx - 65] = 50;
+        tilemap.tiles[sy * 64 + sx - 64] = 51;
+        tilemap.tiles[sy * 64 + sx - 63] = 52;
+        tilemap.tiles[sy * 64 + sx - 1] = 53;
+        tilemap.tiles[sy * 64 + sx] = 54;
+        tilemap.tiles[sy * 64 + sx + 1] = 55;
+        tilemap.tiles[sy * 64 + sx + 63] = 56;
+        tilemap.tiles[sy * 64 + sx + 64] = 57;
+        tilemap.tiles[sy * 64 + sx + 65] = 58;
       }
     }
   }
