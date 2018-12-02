@@ -9,7 +9,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
   animateHitboxes: false,
   defaultIsAnimating: true,
   defaultAnimationName: 'stand_down',
-  hitboxes: [new Hitbox(-.10, -.05, .10, -.25, 0xFFFFFFFF)],
+  hitboxes: [new Hitbox(-.10, -.05, .10, -.25, 0x1)],
   animations: {
     down: new AnimationSequence([
       new AnimationFrame(assets.images.sprites, 16, 16, 16, 16),

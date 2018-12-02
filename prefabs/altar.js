@@ -3,7 +3,7 @@
 return {
   label: 'altar',
   isPassive: true,
-  hitboxes: [new Hitbox(-.43, -.43, .43, 0, 0xFFFFFFFF)],
+  hitboxes: [new Hitbox(-.43, -.43, .43, 0, 0x1)],
   animations: {
     default: new AnimationSequence([
       new AnimationFrame(assets.images.sprites, 16, 112, 26, 19),

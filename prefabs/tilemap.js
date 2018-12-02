@@ -3,15 +3,15 @@
 const tilemap = {
   tileTypes: [
     { x: 0, y: 0, bits: 0 },
-    { x: 0, y: 1, bits: 0 },
-    { x: 1, y: 1, bits: 0 },
-    { x: 2, y: 1, bits: 0 },
-    { x: 0, y: 2, bits: 0 },
+    { x: 0, y: 1, bits: 6 },
+    { x: 1, y: 1, bits: 4 },
+    { x: 2, y: 1, bits: 6 },
+    { x: 0, y: 2, bits: 2 },
     { x: 1, y: 2, bits: 0 },
-    { x: 2, y: 2, bits: 0 },
-    { x: 0, y: 3, bits: 0 },
-    { x: 1, y: 3, bits: 0 },
-    { x: 2, y: 3, bits: 0 },
+    { x: 2, y: 2, bits: 2 },
+    { x: 0, y: 3, bits: 6 },
+    { x: 1, y: 3, bits: 4 },
+    { x: 2, y: 3, bits: 6 },
   ],
   /*
   tiles: [

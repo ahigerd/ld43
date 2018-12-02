@@ -55,16 +55,17 @@ class TileMap extends Sprite {
     }
   }
 
-  bitsAt(x, y) {
+  bitsAt(x, y, debug) {
     if (y === undefined) {
       y = x[1];
       x = x[0];
     }
-    let tx = (x * this.tilesPerUnit - this._origin[0]);
-    let ty = (y * this.tilesPerUnit - this._origin[1] + 1);
+    let tx = (x - this._origin[0]) * this.tilesPerUnit;
+    let ty = (y - this._origin[1]) * this.tilesPerUnit;
     if (tx < 0 || ty < 0) return 0;
     tx |= 0;
     ty |= 0;
+    if (debug) console.log('->', tx, ty);
     if (tx >= this.width || ty >= this.height) return 0;
     return this.tileBits[ty * this.width + tx];
   }
