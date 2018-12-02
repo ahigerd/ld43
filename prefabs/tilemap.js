@@ -2,33 +2,120 @@
 
 const tilemap = {
   tileTypes: [
-    { x: 0, y: 0, bits: 0 },
-    { x: 0, y: 1, bits: 6 },
-    { x: 1, y: 1, bits: 4 },
-    { x: 2, y: 1, bits: 6 },
-    { x: 0, y: 2, bits: 2 },
-    { x: 1, y: 2, bits: 0 },
-    { x: 2, y: 2, bits: 2 },
-    { x: 0, y: 3, bits: 6 },
-    { x: 1, y: 3, bits: 4 },
-    { x: 2, y: 3, bits: 6 },
+    { x: 3, y: 0, bits: 0 }, // grass
+    { x: 5, y: 0, bits: 6 }, // tiles TL
+    { x: 6, y: 0, bits: 4 }, // tiles T
+    { x: 7, y: 0, bits: 6 }, // tiles TR
+    { x: 5, y: 1, bits: 2 }, // tiles L
+    { x: 6, y: 1, bits: 0 }, // tiles
+    { x: 7, y: 1, bits: 2 }, // tiles R
+    { x: 5, y: 2, bits: 6 }, // tiles BL
+    { x: 6, y: 2, bits: 4 }, // tiles B
+    { x: 7, y: 2, bits: 6 }, // tiles BR
+    { x: 0, y: 0, bits: 0 }, // dirt TL
+    { x: 1, y: 0, bits: 0 }, // dirt T
+    { x: 2, y: 0, bits: 0 }, // dirt TR
+    { x: 0, y: 1, bits: 0 }, // dirt L
+    { x: 1, y: 1, bits: 0 }, // dirt 
+    { x: 2, y: 1, bits: 0 }, // dirt R
+    { x: 0, y: 2, bits: 0 }, // dirt BL
+    { x: 1, y: 2, bits: 0 }, // dirt B
+    { x: 2, y: 2, bits: 0 }, // dirt BR
+    { x: 1, y: 3, bits: 0 }, // dirt H
+    { x: 3, y: 4, bits: 0 }, // dirt V
+    { x: 2, y: 3, bits: 0 }, // dirt cap L
+    { x: 3, y: 3, bits: 0 }, // dirt cap T
+    { x: 0, y: 3, bits: 0 }, // dirt cap R
+    { x: 3, y: 5, bits: 0 }, // dirt cap B
+    { x: 4, y: 0, bits: 0 }, // dirt spot
+    { x: 3, y: 1, bits: 0 }, // dirt tee down
+    { x: 3, y: 2, bits: 0 }, // dirt tee up
+    { x: 4, y: 1, bits: 0 }, // dirt tee left
+    { x: 4, y: 2, bits: 0 }, // dirt tee right
+    { x: 0, y: 4, bits: 0 }, // dirt /
+    { x: 0, y: 5, bits: 0 }, // dirt \
   ],
-  /*
-  tiles: [
-    0, 0, 0, 0, 4,
-    0, 0, 6, 0, 7,
-    0, 1, 5, 0, 0,
-    1, 5, 5, 3, 0,
-    4, 5, 5, 5, 3,
-    7, 8, 8, 8, 9,
-  ],
-  */
   tiles: new Array(64*64).fill(0),
   tileSize: 16,
-  width: 64, // 5,
-  height: 64, // 6,
+  width: 64,
+  height: 64,
   image: assets.images.tileset,
 };
+
+const TEE_MATCH = {
+  0x1a: 27, // dirt b
+  0x4a: 28, // dirt r
+  0x52: 29, // dirt l
+  0x58: 26, // dirt t
+};
+
+const CARDINAL_MATCH = {
+  0x00: 25, // dirt spot
+  0x02: 24, // dirt cap t
+  0x08: 21, // dirt cap l
+  0x0a: 18, // dirt br
+  0x10: 23, // dirt cap r
+  0x12: 16, // dirt bl
+  0x18: 19, // dirt h
+  0x1a: 17, // dirt b
+  0x40: 22, // dirt cap b
+  0x42: 20, // dirt v
+  0x48: 12, // dirt tr
+  0x4a: 15, // dirt r
+  0x50: 10, // dirt tl
+  0x52: 13, // dirt l
+  0x58: 11, // dirt t
+};
+
+for (let i = 0; i < 10; i++) {
+  let w = (Math.random(16) * 16) | 0;
+  let h = (Math.random(16) * 16) | 0;
+  let x = (Math.random(64 - w) * (64 - w)) | 0;
+  let y = (Math.random(64 - h) * (64 - h)) | 0;
+  if (i == 0) {
+    h = 5;
+    w = 5;
+    y = 20;
+    x = 20;
+  } else if (i == 1) {
+    h = 5;
+    w = 5;
+    y = 24;
+    x = 24;
+  } else if (i == 2) {
+    h = 5;
+    w = 1;
+    y = 15;
+    x = 15;
+  }
+  for (let sy = y; sy < y + h; sy++) {
+    for (let sx = x; sx < x + w; sx++) {
+      tilemap.tiles[sy * 64 + sx] = 14;
+    }
+  }
+}
+
+for (let y = 1; y < 63; y++) {
+  for (let x = 1; x < 63; x++) {
+    const p = y * 64 + x;
+    const t = tilemap.tiles[p];
+    if (t != 14) continue;
+    // neighbors
+    const n = (
+      (tilemap.tiles[p - 65] && 0x01) |
+      (tilemap.tiles[p - 64] && 0x02) |
+      (tilemap.tiles[p - 63] && 0x04) |
+      (tilemap.tiles[p - 1]  && 0x08) |
+      (tilemap.tiles[p + 1]  && 0x10) |
+      (tilemap.tiles[p + 63] && 0x20) |
+      (tilemap.tiles[p + 64] && 0x40) |
+      (tilemap.tiles[p + 65] && 0x80)
+    );
+    // cardinal neighbors
+    const c = n & 0x5a;
+    tilemap.tiles[p] = (n & 0xa5 ? 0 : TEE_MATCH[c]) || CARDINAL_MATCH[c] || 14;
+  }
+}
 
 for (let y = 30; y < 35; y++) {
   for (let x = 30; x < 35; x++) {
@@ -57,14 +144,6 @@ for (let y = 30; y < 35; y++) {
     }
   }
 }
-tilemap.tiles[12*64+12] = 1;
-tilemap.tiles[12*64+13] = 2;
-tilemap.tiles[12*64+14] = 3;
-tilemap.tiles[13*64+12] = 4;
-tilemap.tiles[13*64+13] = 5;
-tilemap.tiles[13*64+14] = 6;
-tilemap.tiles[14*64+12] = 7;
-tilemap.tiles[14*64+13] = 8;
-tilemap.tiles[14*64+14] = 9;
+
 
 return tilemap;
