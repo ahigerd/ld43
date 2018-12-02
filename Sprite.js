@@ -2,6 +2,31 @@
 // import Point from './Point';
 // import Rect from './Rect';
 
+function debugHitbox(camera, fill = false) {
+  const frame = this.currentFrame;
+  const layer = camera.layers[this.layer];
+  const pixelRect = this.hitbox.translated(this._origin);
+
+  layer.strokeStyle = 'black';
+  layer.beginPath();
+  layer.rect(
+    pixelRect[0] * PIXELS_PER_UNIT,
+    pixelRect[1] * PIXELS_PER_UNIT,
+    (pixelRect[2] - pixelRect[0]) * PIXELS_PER_UNIT,
+    (pixelRect[3] - pixelRect[1]) * PIXELS_PER_UNIT,
+  );
+  layer.stroke();
+  layer.beginPath();
+  layer.fillStyle = 'red';
+  layer.rect(
+    this._origin[0] * PIXELS_PER_UNIT - 1,
+    this._origin[1] * PIXELS_PER_UNIT - 1,
+    2,
+    2,
+  );
+  layer.fill();
+}
+
 class Hitbox extends Rect {
   constructor(p1, p2, p3, p4, p5) {
     if (p4 !== undefined) {
@@ -300,7 +325,6 @@ class Sprite {
   render(camera) {
     const frame = this.currentFrame;
     if (frame && frame.imageData) {
-      //commonRender.call(this, camera);
       camera.layers[this.layer].drawImage(
         frame.imageData,
         frame.imageBounds[0],
@@ -312,6 +336,7 @@ class Sprite {
         frame.imageBounds[2],
         frame.imageBounds[3],
       );
+      //debugHitbox.call(this, camera);
     }
   }
 

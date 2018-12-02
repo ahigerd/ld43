@@ -5,7 +5,7 @@ return {
   animateHitboxes: false,
   defaultIsAnimating: true,
   defaultAnimationName: 'stand_down',
-  hitboxes: [new Hitbox(-.10, .05, .10, .48, 0xFFFFFFFF)],
+  hitboxes: [new Hitbox(-.10, -.05, .10, -.25, 0xFFFFFFFF)],
   animations: {
     down: new AnimationSequence([
       new AnimationFrame(assets.images.sprites, 64, 16, 16, 16),

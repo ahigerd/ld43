@@ -2,7 +2,7 @@
 
 return {
   label: 'coin',
-  hitboxes: [new Hitbox(-.2, .08, .2, .45, 0xFFFFFFFF)],
+  hitboxes: [new Hitbox(-.2, -.02, .2, -.35, 0xFFFFFFFF)],
   defaultAnimationName: 150,
   isTrigger: true,
   isPassive: true,

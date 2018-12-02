@@ -10,9 +10,10 @@ assets.load({
     tilemap: 'prefabs/tilemap.js',
     worshiper: 'prefabs/worshiper.js',
     coin: 'prefabs/coin.js',
+    altar: 'prefabs/altar.js',
   },
 }).then(() => {
-  window.tilemap = new TileMap(assets.prefabs.tilemap, [0, -2]);
+  window.tilemap = new TileMap(assets.prefabs.tilemap, [-16, -16]);
   scene.add(window.tilemap);
 
   window.worshipers = [];
@@ -41,7 +42,10 @@ assets.load({
     scene.add(coin);
   }
 
-  window.hero = new Sprite(assets.prefabs.hero, [.75, -1]);
+  window.altar = new Sprite(assets.prefabs.altar, [.25, 0]);
+  scene.add(window.altar);
+
+  window.hero = new Sprite(assets.prefabs.hero, [.25, 1]);
   scene.add(window.hero);
 
   camera.setScale(2, 2);
