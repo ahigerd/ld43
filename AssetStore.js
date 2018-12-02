@@ -93,11 +93,9 @@ class AssetStore {
       if (this.modules[url]) {
         return this.modules[url];
       }
-      const module = {};
       return this.modules[url] = fetch(url)
         .then(response => response.text())
-        .then(js => new Function('assets', js).call(module, this))
-        .then(() => module);
+        .then(js => new Function('assets', js)(this));
     }));
   }
 }

@@ -1,6 +1,6 @@
 "use strict";
 
-Object.assign(this, {
+return {
   move(sprite, ms, dx, dy) {
     const moving = dx || dy;
     if (dy < 0) {
@@ -58,4 +58,4 @@ Object.assign(this, {
       ((sprite._origin[1] * PIXELS_PER_UNIT) | 0) / PIXELS_PER_UNIT,
     );
   },
-});
+}

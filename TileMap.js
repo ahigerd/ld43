@@ -65,7 +65,6 @@ class TileMap extends Sprite {
     if (tx < 0 || ty < 0) return 0;
     tx |= 0;
     ty |= 0;
-    if (debug) console.log('->', tx, ty);
     if (tx >= this.width || ty >= this.height) return 0;
     return this.tileBits[ty * this.width + tx];
   }
