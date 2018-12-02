@@ -54,7 +54,7 @@ const tilemap = {
     { x: 4, y: 7, bits: 1 }, // water tee right
     { blank: true, bits: 0xFFFFFFFF }, // map boundary
   ],
-  tiles: new Array(64*64).fill(0),
+  tiles: new Uint8Array(64 * 64).fill(0),
   tileSize: 16,
   width: 64,
   height: 64,
@@ -94,12 +94,33 @@ function tileMatch(p, t, v) {
   return tilemap.tiles[p] && v;
 }
 
+function recurseReachable(tiles, reachable, x, y) {
+  if (x < 1 || x > 62 || y < 1 || y > 62) return;
+  const p = y * 64 + x;
+  // don't redo visited tiles
+  if (reachable[p]) return;
+  if (tilemap.tileTypes[tiles[p]].bits & 1) {
+    // not reachable
+    reachable[p] = 2;
+  } else {
+    // is reachable
+    reachable[p] = 1;
+    recurseReachable(tiles, reachable, x - 1, y); 
+    recurseReachable(tiles, reachable, x + 1, y);
+    recurseReachable(tiles, reachable, x, y - 1);
+    recurseReachable(tiles, reachable, x, y + 1);
+  }
+}
+
 return assets.require('scripts/NoiseField.js').then(([NoiseField]) => {
+  // Initialize map with simplex noise
   const field = new NoiseField(Math.random(), 2, 16);
-  for (let sy = 0; sy < 64; sy++) {
-    for (let sx = 0; sx < 64; sx++) {
+  for (let sy = 1; sy < 63; sy++) {
+    for (let sx = 1; sx < 63; sx++) {
+      // Strongly favor higher values in the center
       let center = 30 - ((sx - 32) * (sx - 32) + (sy - 32) * (sy - 32));
       if (center < 0) center = 0;
+      // Favor water approaching the edge
       const edge = (
         (sx < 8 ? 9 - sx : (sx > 55 ? sx - 55 : 0)) +
         (sy < 8 ? 9 - sy : (sy > 55 ? sy - 55 : 0))
@@ -114,6 +135,7 @@ return assets.require('scripts/NoiseField.js').then(([NoiseField]) => {
     }
   }
 
+  // Water tiles may not border grass tiles
   for (let sy = 1; sy < 63; sy++) {
     for (let sx = 1; sx < 63; sx++) {
       const p = sy * 64 + sx;
@@ -125,13 +147,22 @@ return assets.require('scripts/NoiseField.js').then(([NoiseField]) => {
     }
   }
 
-  for (let i = 0; i < 64; i++) {
-    tilemap.tiles[i * 64] = 34;
-    tilemap.tiles[i * 64 + 63] = 34;
-    tilemap.tiles[i] = 34;
-    tilemap.tiles[4032 + i] = 34;
+  // Reachability test: replace inaccessible land with water.
+  // This conveniently also makes the outer edge water.
+  const reachable = new Uint8Array(64*64).fill(0);
+  recurseReachable(tilemap.tiles, reachable, 32, 32);
+  for (let y = 0; y < 64; y++) {
+    for (let x = 0; x < 64; x++) {
+      const p = y * 64 + x;
+      // If the tile was never explored, convert it to water.
+      // If the tile was explored and it was inaccessible, leave it alone.
+      if (!reachable[p]) {
+        tilemap.tiles[p] = 34;
+      }
+    }
   }
 
+  // Get fancy with terrain transitions
   for (let y = 1; y < 63; y++) {
     for (let x = 1; x < 63; x++) {
       const p = y * 64 + x;
@@ -154,6 +185,7 @@ return assets.require('scripts/NoiseField.js').then(([NoiseField]) => {
     }
   }
 
+  // Put the main altar in the middle
   for (let y = 30; y < 35; y++) {
     for (let x = 30; x < 35; x++) {
       const pos = y * 64 + x;
