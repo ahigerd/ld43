@@ -1,8 +1,8 @@
 "use strict";
 
 const PLAYER_HATE_RANGE = 2.5;
-const MIN_CHASE_RANGE = .3;
-const MAX_ATTACK_RANGE = .5;
+const MIN_CHASE_RANGE = .2;
+const MAX_ATTACK_RANGE = .4;
 const MIN_ATTACK_WAIT = 400;
 const ATTACK_WAIT_RANGE = 400;
 

@@ -61,9 +61,6 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
     stand_right: new AnimationSequence([
       new AnimationFrame(assets.images.sprites, 64, 64, 16, 16),
     ], 250.0),
-    mining: new AnimationSequence([
-      new AnimationFrame(assets.images.sprites, 0, 80, 16, 16),
-    ], 250.0),
   },
 
   start() {
@@ -82,6 +79,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
     if (this.mineTimer > 0) {
       this.mineTimer -= ms;
       if (this.mineTimer <= 0) {
+        this.hidden = false;
         const coin = new Sprite(assets.prefabs.coin, this._origin);
         coin.setAnimation(this.mineValue);
         scene.add(coin);
@@ -147,7 +145,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
         this.targetMine.worshiper = null;
       }
 
-      this.setAnimation('mining');
+      this.hidden = true;
       this.mineTimer = 2000;
       this.targetMine = null;
     } else if (other.label == 'altar') {

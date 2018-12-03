@@ -5,7 +5,7 @@ return {
   animateHitboxes: false,
   defaultIsAnimating: false,
   defaultAnimationName: 'default',
-  hitboxes: [new Hitbox(-.22, -.02, .22, -.48, 0x1)],
+  hitboxes: [new Hitbox(-.25, 0, .25, -.5, 0x1)],
   animations: {
     default: new AnimationSequence([
       new AnimationFrame(assets.images.sprites, 0, 80, 16, 16),
@@ -45,7 +45,7 @@ return {
 
   onCollisionEnter(other) {
     if (other.label == 'hero' || other.label == 'worshiper') {
-      other.inflict(1);
+      other.inflict(10);
     }
   },
 };
