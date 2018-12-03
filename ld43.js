@@ -21,6 +21,7 @@ assets.load({
     worshiper: 'prefabs/worshiper.js',
     coin: 'prefabs/coin.js',
     altar: 'prefabs/altar.js',
+    mine: 'prefabs/mine.js',
   },
 }).then(() => {
   window.tilemap = new TileMap(assets.prefabs.tilemap, [-16, -16]);

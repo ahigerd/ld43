@@ -120,7 +120,7 @@ function recurseReachable(tiles, reachable, x, y) {
   }
 }
 
-return assets.require('scripts/NoiseField.js').then(([NoiseField]) => {
+return assets.require('scripts/NoiseField.js', 'scripts/TreasureMine.js').then(([NoiseField, TreasureMine]) => {
   // Initialize map with simplex noise
   const field = new NoiseField(Math.random(), 2, 16);
   for (let sy = 1; sy < 63; sy++) {
@@ -250,6 +250,7 @@ return assets.require('scripts/NoiseField.js').then(([NoiseField]) => {
         tilemap.tiles[sy * 64 + sx + 63] = 56;
         tilemap.tiles[sy * 64 + sx + 64] = 57;
         tilemap.tiles[sy * 64 + sx + 65] = 58;
+        TreasureMine.addMine(sx * .5 - 15.73, sy * .5 - 15.8);
       }
     }
   }
