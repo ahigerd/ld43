@@ -34,6 +34,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => {
       document.getElementById('loading').style.display = 'none';
       document.getElementById('splash').style.display = 'block';
       document.getElementById('helppage').style.display = 'none';
+      document.getElementById('gameOver').style.display = 'none';
 
       CharacterCore.centerCameraOn(window.tilemap);
     },
@@ -50,6 +51,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => {
       window.droppedCoins = [];
 
       document.getElementById('splash').style.display = 'none';
+      document.getElementById('gameOver').style.display = 'none';
       const scene = window.engine.activeScene = new Scene();
 
       assets.prefabs.tilemap.init();
@@ -106,6 +108,11 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => {
       } else {
         engine.pause(false);
       }
+    },
+
+    gameOver() {
+      state = 'gameover';
+      document.getElementById('gameOver').style.display = 'block';
     },
   };
 

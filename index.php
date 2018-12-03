@@ -122,7 +122,7 @@
 }
 .bigbutton {
   display: inline-block;
-  width: 30%;
+  width: 200px;
   margin: 20px;
   padding: 20px;
   font-size: 30px;
@@ -150,7 +150,7 @@
   text-align: center;
   padding: 6px;
 }
-#pauseBox {
+#pauseBox, #gameOver {
   background: rgba(255, 255, 128, .9);
   font-family: sans-serif;
   text-align: center;
@@ -163,13 +163,15 @@
   top: 140px;
   left: calc(50% - 160px);
 }
-#pauseBox div {
+#pauseBox div, #gameOver div {
   display: inline-block;
   line-height: initial;
   vertical-align: middle;
 }
 #pauseBox h1 {
   animation: blink 2s infinite;
+}
+h1 {
   font-size: 30px;
   padding: 0;
   margin: 0 0 20px;
@@ -221,6 +223,12 @@ foreach ($scripts as $script) {
   <div>
     <h1>PAUSED</h1>
     Press Escape or Pause to continue
+  </div>
+</div>
+<div id='gameOver'>
+  <div>
+    <h1>GAME OVER</h1>
+    <a onclick='window.GameManager.showTitle()' class='bigbutton start'>Start Over</a>
   </div>
 </div>
 <div id='dpad'></div>

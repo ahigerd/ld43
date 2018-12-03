@@ -80,7 +80,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
   },
   
   update(scene, ms) {
-    const playerDist = this.origin.distanceTo(window.hero.origin);
+    const playerDist = window.hero.dead ? Infinity : this.origin.distanceTo(window.hero.origin);
     let nearest = window.hero;
     let nearestDist = playerDist;
     for (const w of window.worshipers) {

@@ -71,7 +71,8 @@ return {
               break;
             case 'hero':
               GameManager.gameOver();
-              break;
+              this.hidden = true;
+              return; // don't remove from the scene
           }
           scene.remove(this);
         }

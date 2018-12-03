@@ -88,6 +88,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
   },
 
   update(scene, ms) {
+    if (this.dead) return;
     this.attackTime -= ms;
     if (this.attackTime > 0) {
       const radius = (750 - this.attackTime) * .0005 + .25;
