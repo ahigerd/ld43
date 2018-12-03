@@ -63,6 +63,7 @@ class Scene {
   }
 
   postUpdate(sprite) {
+    if (!sprite) return;
     let before = null;
     if (sprite.lastAabb) {
       Scene._beforeReuse.set(sprite.lastAabb);

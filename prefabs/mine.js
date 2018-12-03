@@ -53,12 +53,6 @@ return {
       this.value = 150;
     }
 
-    /*
-    const coin = new Sprite(assets.prefabs.coin, this._origin.added([-.05, .22]));
-    coin.setAnimation(this.value);
-    scene.add(coin);
-    */
-
     this.ready = true;
     this.worshiper = null;
     this.respawnCounter = 0;
@@ -77,7 +71,7 @@ return {
         let nearestDist = Infinity;
         for (let i = 0; i < window.worshipers.length; i++) {
           const w = window.worshipers[i];
-          if (!w.isWandering) continue;
+          if (!w.isWandering || w.stuckTimer < 10) continue;
           const dist = this.origin.distanceTo(w.origin);
           if (dist < nearestDist) {
             nearest = w;

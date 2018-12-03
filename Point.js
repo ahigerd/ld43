@@ -172,6 +172,15 @@ function makePointClass(superclass) {
     }
 
     /**
+     * Scales the vector represented by this point to have length 1.
+     */
+    normalize() {
+      const dist = this.magnitude;
+      this[0] /= dist;
+      this[1] /= dist;
+    }
+
+    /**
      * Computes the dot product of this point treated as a vector with another
      * point also treated as a vector.
      * @param {Point} The other vector.

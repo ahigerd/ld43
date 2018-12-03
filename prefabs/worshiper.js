@@ -1,5 +1,7 @@
 "use strict";
 
+const vectorCache = new Point(0, 0);
+
 function clamp(x, a, b) {
   return x < a ? a : (x > b ? b : x);
 }
@@ -71,6 +73,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
     this.mineTimer = 0;
     this.destination = new Point(this.origin);
     this.stuckTimer = 10;
+    this.coinTrail = [];
     Object.assign(this, methods);
   },
 
@@ -78,6 +81,12 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
     if (this.mineTimer > 0) {
       this.mineTimer -= ms;
       if (this.mineTimer <= 0) {
+        console.log('got', this.mineValue);
+        const coin = new Sprite(assets.prefabs.coin, this._origin);
+        coin.setAnimation(this.mineValue);
+        scene.add(coin);
+        this.coinTrail.push(coin);
+
         this.destination.setXY(window.altar.origin[0], window.altar.origin[1]);
         this.targetMine = null;
       }
@@ -94,7 +103,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
     const ox = this.origin[0];
     const oy = this.origin[1];
     CharacterCore.move(this, ms, dx * speed, dy * speed);
-    if (Math.abs(this.origin[0] - ox) + Math.abs(this.origin[1] - oy) < .001) {
+    if (!this.isWandering && Math.abs(this.origin[0] - ox) + Math.abs(this.origin[1] - oy) < .001) {
       this.stuckTimer--;
       if (this.stuckTimer <= 0) {
         console.log('stuck');
@@ -107,18 +116,37 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
     } else {
       this.stuckTimer = 10;
     }
+
+    for (let i = 1; i <= this.coinTrail.length; i++) {
+      const coin = this.coinTrail[i - 1];
+      vectorCache.set(this.origin);
+      vectorCache.subtract(coin.origin);
+      const dist = vectorCache.magnitude;
+      if (dist > .5 * i) {
+        coin.move(ms / 1000 * vectorCache[0] / dist, ms / 1000 * vectorCache[1] / dist);
+      }
+    }
   },
 
   onCollisionEnter(other, coll) {
     if (other.label == 'worshiper') {
       this.onCollisionStay(other, coll);
-    } else if (other == this.targetMine) {
-      this.targetMine.deplete();
+    } else if (other.label == 'mine' && other.ready) {
+      this.mineValue = other.value;
+      other.deplete();
+      if (this.targetMine && other != this.targetMine) {
+        this.targetMine.worshiper = null;
+      }
 
       this.setAnimation('mining');
       this.mineTimer = 2000;
       this.targetMine = null;
     } else if (other.label == 'altar') {
+      for (const c of this.coinTrail) {
+        c.depositing = true;
+      }
+      this.coinTrail.length = 0;
+
       this.isWandering = true;
       if (this.origin[0] < other.origin[0] - .3) {
         this.destination.setXY(this.origin[0] + Math.random() - 1, this.origin[1] + Math.random() * 2 - 1);
