@@ -13,6 +13,8 @@ return {
     this.onCollisionStay(other, coll);
   },
   onCollisionStay(other, coll) {
+    // TODO: since this is glitchy, only do collisions for the player
+    if (other.label !== 'hero') return;
     // TODO: cutting corners diagonally is super glitchy
     const px2 = coll.penetration[0] * coll.penetration[0];
     const py2 = coll.penetration[1] * coll.penetration[1];

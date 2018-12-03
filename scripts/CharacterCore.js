@@ -17,6 +17,10 @@ return {
       ms /= 500;
       dx *= ms;
       dy *= ms;
+      if (dx && dy) {
+        dx *= .71;
+        dy *= .71;
+      }
       const rx = sprite._origin[0] + sprite.hitbox[dx < 0 ? 0 : 2] + dx;
       const ry = sprite._origin[1] + sprite.hitbox[dy < 0 ? 1 : 3] + dy;
       if (dx) {
@@ -33,13 +37,13 @@ return {
       if (tileBits & 2) dx *= .5;
       if (tileBits & 4) dy *= .5;
       sprite.move(dx, dy);
-      if (dy < 0 && !dx) {
+      if (dy < 0 && (dy < -Math.abs(dx))) {
         sprite.lastDir = 'up';
-      } else if (dy > 0 && !dx) {
+      } else if (dy > 0 && (dy > Math.abs(dx))) {
         sprite.lastDir = 'down';
-      } else if (dx < 0 && !dy) {
+      } else if (dx < 0 && (dx < -Math.abs(dy))) {
         sprite.lastDir = 'left';
-      } else if (dx > 0 && !dy) {
+      } else if (dx > 0 && (dx > Math.abs(dy))) {
         sprite.lastDir = 'right';
       }
     }

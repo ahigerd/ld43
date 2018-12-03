@@ -49,23 +49,6 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
     ], 250.0),
   },
 
-  /*
-  render(camera) {
-    Sprite.prototype.render.call(this, camera);
-    const rect = this.hitbox.translated(this.origin);
-    const layer = camera.layers[this.layer];
-    layer.strokeStyle = 'black';
-    layer.beginPath();
-    layer.rect(
-      (PIXELS_PER_UNIT * rect[0]) - .5,
-      (PIXELS_PER_UNIT * rect[1]) - .5,
-      (PIXELS_PER_UNIT * (rect[2] - rect[0])),
-      (PIXELS_PER_UNIT * (rect[1] - rect[3])),
-    );
-    layer.stroke();
-  },
-  */
-
   start() {
     this.lastDir = 'down';
     CharacterCore.centerCameraOn(this);
@@ -77,7 +60,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
     if (Input.keys.ArrowRight) dx++;
     if (Input.keys.ArrowUp) dy--;
     if (Input.keys.ArrowDown) dy++;
-    const moved = CharacterCore.move(this, ms, dx, dy);
+    const moved = CharacterCore.move(this, ms, dx * 1.2, dy * 1.2);
     if (moved) {
       CharacterCore.centerCameraOn(this);
     }
