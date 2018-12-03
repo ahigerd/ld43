@@ -82,7 +82,6 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
     if (this.mineTimer > 0) {
       this.mineTimer -= ms;
       if (this.mineTimer <= 0) {
-        console.log('got', this.mineValue);
         const coin = new Sprite(assets.prefabs.coin, this._origin);
         coin.setAnimation(this.mineValue);
         scene.add(coin);
@@ -177,7 +176,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
     vectorCache.set(this._origin);
     vectorCache.subtract(other._origin);
     vectorCache.normalize();
-    this.move(vectorCache[0] * .02, vectorCache[1] * .02);
+    CharacterCore.move(this, 500, vectorCache[0] * .02, vectorCache[1] * .02);
     this.setRandomDestination();
   }
 }));

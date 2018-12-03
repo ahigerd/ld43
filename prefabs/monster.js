@@ -2,7 +2,7 @@
 
 const PLAYER_HATE_RANGE = 2.5;
 const MIN_CHASE_RANGE = .3;
-const MAX_ATTACK_RANGE = .4;
+const MAX_ATTACK_RANGE = .5;
 const MIN_ATTACK_WAIT = 400;
 const ATTACK_WAIT_RANGE = 400;
 
@@ -80,14 +80,18 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
     const playerDist = this.origin.distanceTo(window.hero.origin);
     let nearest = window.hero;
     let nearestDist = playerDist;
-    if (playerDist > PLAYER_HATE_RANGE) {
-      for (const w of window.worshipers) {
-        const dist = this.origin.distanceTo(w.origin);
-        if (dist < nearestDist) {
-          nearest = w;
-          nearestDist = dist;
-        }
+    for (const w of window.worshipers) {
+      if (w.mineTimer > 0) continue;
+      const dist = this.origin.distanceTo(w.origin);
+      if (dist < nearestDist) {
+        nearest = w;
+        nearestDist = dist;
       }
+    }
+    let attackDist = nearestDist;
+    if (playerDist < PLAYER_HATE_RANGE) {
+      nearest = window.hero;
+      nearestDist = playerDist;
     }
 
     if (!this.oneShotName) {
@@ -98,7 +102,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
         CharacterCore.move(this, ms, vectorCache[0] * .5, vectorCache[1] * .5);
       }
 
-      if (nearestDist < MAX_ATTACK_RANGE && this.attackCooldown <= 0) {
+      if (attackDist < MAX_ATTACK_RANGE && this.attackCooldown <= 0) {
         const weapon = new Sprite(assets.prefabs.sword);
         weapon.origin.set(this.origin);
         switch (this.lastDir) {
@@ -131,6 +135,6 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
     vectorCache.set(this._origin);
     vectorCache.subtract(other._origin);
     vectorCache.normalize();
-    this.move(vectorCache[0] * .02, vectorCache[1] * .02);
+    CharacterCore.move(this, 500, vectorCache[0] * .02, vectorCache[1] * .02);
   }
 }));

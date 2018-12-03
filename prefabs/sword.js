@@ -48,8 +48,4 @@ return {
       other.inflict(1);
     }
   },
-
-  onCollisionStay(other) {
-    if (other.label == 'hero') console.log('sword stay');
-  }
 };
