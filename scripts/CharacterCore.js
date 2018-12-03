@@ -3,6 +3,11 @@
 const spriteMethods = {
   inflict(damage) {
     this.health -= damage;
+    if (this.health <= 0) {
+      this.health = 0;
+      this.dead = true;
+      // TODO: animation
+    }
     if (this.label == 'hero') console.log(this.health);
   },
   render(camera) {
@@ -15,7 +20,7 @@ const spriteMethods = {
     const fraction = this.health < 0 ? 0 : this.health / this.maxHealth;
     const pixelRect = this.pixelRect;
     layer.fillStyle = `hsl(${fraction * 120},100%,50%)`;
-    layer.fillRect(pixelRect[0], pixelRect[1] - 5, (pixelRect[2] - pixelRect[0] - 1) * fraction, 3);
+    layer.fillRect(pixelRect[0], pixelRect[1] - 5, (pixelRect[2] - pixelRect[0] - .5) * fraction, 3);
   },
 };
 
@@ -25,6 +30,7 @@ return {
     sprite.health = 100;
     sprite.maxHealth = 100;
     sprite.hidden = false;
+    sprite.dead = false;
     Object.assign(sprite, spriteMethods);
   },
   move(sprite, ms, dx, dy) {

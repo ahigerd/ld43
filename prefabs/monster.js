@@ -81,7 +81,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
     let nearest = window.hero;
     let nearestDist = playerDist;
     for (const w of window.worshipers) {
-      if (w.mineTimer > 0) continue;
+      if (w.hidden && w.dead) continue;
       const dist = this.origin.distanceTo(w.origin);
       if (dist < nearestDist) {
         nearest = w;
