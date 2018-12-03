@@ -47,6 +47,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => {
 
     newLevel() {
       state = 'playing';
+      window.droppedCoins = [];
 
       document.getElementById('splash').style.display = 'none';
       const scene = window.engine.activeScene = new Scene();

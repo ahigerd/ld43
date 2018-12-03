@@ -126,13 +126,11 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
   },
 
   onCollisionEnter(other, coll) {
-    if (other.bits & this.bits) {
-      this.onCollisionStay(other, coll);
-    }
+    this.onCollisionStay(other, coll);
   },
 
   onCollisionStay(other, coll) {
-    if (!(other.bits & this.bits)) {
+    if (!this.shouldCollide(other)) {
       return;
     }
     vectorCache.set(this._origin);

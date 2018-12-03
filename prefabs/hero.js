@@ -140,13 +140,12 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
   },
 
   onCollisionStay(other, coll) {
-    if (!(other.bits & this.bits)) {
+    if (!this.shouldCollide(other)) {
       return;
     }
     vectorCache.set(this._origin);
     vectorCache.subtract(other._origin);
     vectorCache.normalize();
     CharacterCore.move(this, 500, vectorCache[0] * .02, vectorCache[1] * .02);
-    this.setRandomDestination();
   }
 }));

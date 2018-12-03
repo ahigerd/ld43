@@ -1,6 +1,13 @@
 "use strict";
 
 const spriteMethods = {
+  shouldCollide(other) {
+    return (
+      other.label === 'worshiper' || 
+      other.label === 'hero' ||
+      other.label === 'monster'
+    );
+  },
   inflict(damage) {
     if (this.blinkTimer > 0) return;
     this.health -= damage;
@@ -9,6 +16,14 @@ const spriteMethods = {
       this.dead = true;
       this.setAnimation('dead');
       this.blinkTimer = 1000;
+      if (this.label === 'worshiper') {
+        if (this.targetMine) {
+          this.targetMine.abandon(false);
+        }
+        if (this.coinTrail.length > 0) {
+          droppedCoins.push(...this.coinTrail.splice(0, this.coinTrail.length));
+        }
+      }
     } else {
       this.blinkTimer = 500;
     }

@@ -13,9 +13,9 @@ const methods = {
       this.worshiper = null;
     }
   },
-  abandon() {
+  abandon(delay = true) {
     this.worshiper = null;
-    this.retryDelay = 1000;
+    if (delay) this.retryDelay = 1000;
   },
 };
 
@@ -77,7 +77,7 @@ return {
         let nearestDist = Infinity;
         for (let i = 0; i < window.worshipers.length; i++) {
           const w = window.worshipers[i];
-          if (!w.isWandering || w.stuckTimer < 10) continue;
+          if (!w.isWandering || w.stuckTimer < 10 || w.stuckReset > 0) continue;
           const dist = this.origin.distanceTo(w.origin);
           if (dist < nearestDist) {
             nearest = w;
