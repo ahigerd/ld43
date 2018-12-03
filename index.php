@@ -10,7 +10,9 @@
   width: 640px;
   height: 480px;
   border: 1px solid black;
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: calc(50% - 320px);
 }
 #camera canvas {
   position: absolute;
@@ -120,13 +122,11 @@ foreach ($scripts as $script) {
 <script>
 const fpsMeter = document.getElementById('fps');
 
+const assets = new AssetStore();
 const engine = new Engine({
-  scene: new Scene(),
   showFps: true,
 });
-const assets = new AssetStore();
 const scene = engine.activeScene;
-const sprites = [];
 
 const camera = new Camera(document.getElementById('camera'));
 camera.setXY(10, 7.5);

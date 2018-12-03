@@ -25,7 +25,10 @@ assets.load({
     monster: 'prefabs/monster.js',
     sword: 'prefabs/sword.js',
   },
-}).then(() => {
+  require: [
+    'scripts/GameManager.js',
+  ],
+}).then(([GameManager]) => {
   window.tilemap = new TileMap(assets.prefabs.tilemap, [-16, -16]);
   scene.add(window.tilemap);
 

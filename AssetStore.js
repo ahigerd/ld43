@@ -83,9 +83,15 @@ class AssetStore {
   }
 
   load(assets) {
-    return this.loadImageAssets(assets.images)
-      .then(() => this.loadPrefabAssets(assets.prefabs))
-      .then(() => this.loadDataAssets(assets.data));
+    let modules;
+    return Promise.all([
+      this.require(...(assets.require || [])),
+      this.loadImageAssets(assets.images),
+      this.loadDataAssets(assets.data),
+    ]).then(([loadedModules]) => {
+      modules = loadedModules;
+      return this.loadPrefabAssets(assets.prefabs);
+    }).then(() => modules);
   }
 
   require(...urls) {
