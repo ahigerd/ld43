@@ -36,14 +36,25 @@ const Input = {
   },
 };
 
-class Engine {
-  constructor(options = {}) {
-    try {
-      this._eventTarget = new EventTarget();
-    } catch (e) {
-      // MS Edge doesn't support the EventTarget constructor: https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/18274176/
+let EventTargetClass = EventTarget;
+try {
+  new EventTarget();
+} catch (e) {
+  // MS Edge doesn't support the EventTarget constructor: https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/18274176/
+  class EdgeEventTarget {
+    constructor() {
       this._eventTarget = document.createElement('DIV');
+      for (const method of ['addEventListener', 'removeEventListener', 'dispatchEvent']) {
+        this[method] = this._eventTarget[method].bind(this.eventTarget);
+      }
     }
+  }
+  EventTargetClass = EdgeEventTarget;
+}
+
+class Engine extends EventTargetClass {
+  constructor(options = {}) {
+    super();
 
     this._fpsFrames = 0;
     this._fpsSum = 0;
@@ -63,22 +74,18 @@ class Engine {
 
     this.tick = this.tick.bind(this);
 
-    for (const method of ['addEventListener', 'removeEventListener', 'dispatchEvent']) {
-      this[method] = this._eventTarget[method].bind(this.eventTarget);
-    }
-
     this.eventSource = options.eventSource || window;
     this.eventSource.addEventListener('keydown', event => {
       if (!event.altKey && !event.ctrlKey && !event.metaKey) event.preventDefault();
       const key = Input.normalize[event.key] || event.key;
       Input.keys[key] = true;
-      this.dispatchEvent(new CustomEvent('enginekeydown', { detail: { key, altKey: event.altKey, ctrlKey: event.ctrlKey, metaKey: event.metaKey } }));
+      this.dispatch('enginekeydown', { key, altKey: event.altKey, ctrlKey: event.ctrlKey, metaKey: event.metaKey });
     });
     this.eventSource.addEventListener('keyup', event => {
       if (!event.altKey && !event.ctrlKey && !event.metaKey) event.preventDefault();
       const key = Input.normalize[event.key] || event.key;
       Input.keys[key] = false;
-      this.dispatchEvent(new CustomEvent('enginekeyup', { detail: { key, altKey: event.altKey, ctrlKey: event.ctrlKey, metaKey: event.metaKey } }));
+      this.dispatch('enginekeyup', { key, altKey: event.altKey, ctrlKey: event.ctrlKey, metaKey: event.metaKey });
     });
   }
 
@@ -104,7 +111,7 @@ class Engine {
       return;
     }
     this.timer = window.requestAnimationFrame(this.tick);
-    this.dispatchEvent(new CustomEvent('enginestart'));
+    this.dispatch('enginestart');
   }
 
   pause(on = null) {
@@ -117,7 +124,7 @@ class Engine {
       const wasRunning = this.running;
       window.cancelAnimationFrame(this.timer);
       this.timer = null;
-      if (wasRunning) this.dispatchEvent(new CustomEvent('enginepause'));
+      if (wasRunning) this.dispatch('enginepause');
     }
   }
 
@@ -165,5 +172,9 @@ class Engine {
     } else {
       this.timer = null;
     }
+  }
+
+  dispatch(eventType, detail) {
+    this.dispatchEvent(new CustomEvent(eventType, { detail }));
   }
 }

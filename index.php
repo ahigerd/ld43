@@ -100,9 +100,12 @@
 }
 </style>
 <?php
+function loadScript($script) {
+  echo "<script src='$script.js?cb=" . filemtime("$script.js") . "'></script>\n";
+}
 $scripts = array('Engine', 'Point', 'Rect', 'Sprite', 'Scene', 'Camera', 'AssetStore', 'TouchControls', 'TileMap');
 foreach ($scripts as $script) {
-  echo "<script src='$script.js?cb=" . filemtime("$script.js") . "'></script>\n";
+  loadScript($script);
 }
 ?>
 </head>
@@ -143,7 +146,7 @@ engine.addEventListener('enginepause', e => pauseCheck.checked = true);
 engine.addEventListener('enginestart', e => pauseCheck.checked = false);
 </script>
 <?php
-echo "<script src='ld43.js?cb=" . filemtime('ld43.js') . "'></script>\n";
+loadScript('ld43');
 ?>
 </body>
 </html>
