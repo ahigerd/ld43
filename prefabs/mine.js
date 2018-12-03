@@ -5,7 +5,13 @@ const methods = {
     this.respawnCounter = Math.random() * 2000 + 4000;
     this.setAnimation('hidden');
     this.ready = false;
-    this.worshiper = null;
+    if (this.worshiper) {
+      if (this.worshiper.targetMine == this) {
+        this.worshiper.targetMine = null;
+        this.worshiper.setRandomDestination();
+      }
+      this.worshiper = null;
+    }
   },
   abandon() {
     this.worshiper = null;

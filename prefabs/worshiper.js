@@ -95,6 +95,15 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
       if (this.destination.distanceTo(this.origin) < .1) {
         this.setRandomDestination();
       }
+    } else if (this.destination.distanceTo(this.origin) < .1) {
+      if (this.targetMine) {
+        this.destination.setXY(this.targetMine.origin[0], this.targetMine.origin[1] + .25);
+      } else if (this.coinTrail.length) {
+        this.destination.setXY(window.altar.origin[0], window.altar.origin[1]);
+      } else {
+        this.isWandering = true;
+        this.setRandomDestination();
+      }
     }
     const dx = clamp(this.destination[0] - this.origin[0], -.2, .2);
     const dy = clamp(this.destination[1] - this.origin[1], -.2, .2);
@@ -165,6 +174,6 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
       return;
     }
     this._origin.subtract(coll.penetration);
-    this._origin.subtract(coll.penetration);
+    this.setRandomDestination();
   }
 }));
