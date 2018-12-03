@@ -68,6 +68,14 @@ return {
               break;
             case 'monster':
               monsters.splice(monsters.indexOf(this), 1);
+              GameManager.kills++;
+              if (GameManager.kills >= GameManager.wave) {
+                GameManager.wave++;
+                GameManager.kills = 0;
+              }
+              while (monsters.length < GameManager.wave) {
+                GameManager.spawnMonster(this.scene);
+              }
               break;
             case 'hero':
               GameManager.gameOver();

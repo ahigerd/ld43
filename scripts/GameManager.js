@@ -4,6 +4,9 @@ let state = 'title';
 
 return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => {
   const GameManager = {
+    wave: 0,
+    kills: 0,
+
     init() {
       const camera = window.camera = new Camera(document.getElementById('camera'));
       camera.setXY(10, 7.5);
@@ -49,6 +52,8 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => {
     newLevel() {
       state = 'playing';
       window.droppedCoins = [];
+      GameManager.wave = 2;
+      GameManager.kills = 0;
 
       document.getElementById('splash').style.display = 'none';
       document.getElementById('gameOver').style.display = 'none';
@@ -80,17 +85,8 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => {
       }
 
       window.monsters = [];
-      for (let i = 0; i < 10; i++) {
-        const monster = new Sprite(assets.prefabs.monster, [0, 0]);
-        window.monsters.push(monster);
-        do {
-          x = (Math.random() * 64) | 0;
-          y = (Math.random() * 64) | 0;
-          monster._origin.setXY(x / 2 - 16, y / 2 - 16);
-        } while (tilemap.bitsAt(monster._origin) & 9 || 
-            tilemap.bitsAt(monster._origin[0], monster._origin[1] - 1) & 9 || 
-            spawnTooClose(x, y, scene));
-        scene.add(monster);
+      for (let i = 0; i < GameManager.wave; i++) {
+        GameManager.spawnMonster(scene);
       }
 
       window.engine.start();
@@ -113,6 +109,24 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => {
     gameOver() {
       state = 'gameover';
       document.getElementById('gameOver').style.display = 'block';
+    },
+
+    spawnMonster(scene) {
+      let x, y;
+      const monster = new Sprite(assets.prefabs.monster, [0, 0]);
+      window.monsters.push(monster);
+      do {
+        x = (Math.random() * 64) | 0;
+        y = (Math.random() * 64) | 0;
+        monster._origin.setXY(x / 2 - 16, y / 2 - 16);
+      } while (
+        engine.cameras[0].aabb.containsXY(x, y) ||
+        tilemap.bitsAt(monster._origin) & 9 || 
+        tilemap.bitsAt(monster._origin[0], monster._origin[1] - 1) & 9 || 
+        spawnTooClose(x, y, scene)
+      );
+      scene.add(monster);
+      console.log('spawn monster at', x, y);
     },
   };
 
