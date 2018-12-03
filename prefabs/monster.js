@@ -123,13 +123,13 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
   },
 
   onCollisionEnter(other, coll) {
-    if (other.label == 'monster') {
+    if (other.bits & this.bits) {
       this.onCollisionStay(other, coll);
     }
   },
 
   onCollisionStay(other, coll) {
-    if (other.label != 'monster') {
+    if (!(other.bits & this.bits)) {
       return;
     }
     vectorCache.set(this._origin);

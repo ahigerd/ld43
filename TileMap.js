@@ -8,6 +8,7 @@ const MAX_TEXTURE_SIZE = 512;
 
 class TileMap extends Sprite {
   constructor(config = {}, origin = null) {
+    const hasConfigHitboxes = !!config.hitboxes;
     config.hitboxes = config.hitboxes || [new Hitbox(0, 0, config.width, config.height)];
     super(config, origin);
     this.isTileMap = true;
@@ -18,8 +19,10 @@ class TileMap extends Sprite {
     this.tilesPerUnit = PIXELS_PER_UNIT / this.tileSize;
     this.unitsPerTile = this.tileSize * UNITS_PER_PIXEL;
     this.image = config.image;
-    this._hitboxes[0][2] *= this.unitsPerTile;
-    this._hitboxes[0][3] *= this.unitsPerTile;
+    if (!hasConfigHitboxes) {
+      this._hitboxes[0][2] *= this.unitsPerTile;
+      this._hitboxes[0][3] *= this.unitsPerTile;
+    }
 
     const tilesPerChunk = (MAX_TEXTURE_SIZE / this.tileSize) | 0;
 

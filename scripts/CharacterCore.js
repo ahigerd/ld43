@@ -104,6 +104,6 @@ return {
     } else if (y + halfHeight > window.tilemap.lastAabb[3]) {
       y = window.tilemap.lastAabb[3] - halfHeight;
     }
-    engine.cameras[0].setXY(x, y);
+    window.engine.cameras[0].setXY(x, y);
   },
 }

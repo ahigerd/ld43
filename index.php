@@ -6,13 +6,18 @@
   margin-top: 3em;
   float: right
 }
-#camera, #loading {
+#camera, #loading, #splash {
   width: 640px;
   height: 480px;
   border: 1px solid black;
   position: absolute;
   top: 0;
   left: calc(50% - 320px);
+}
+#splash {
+  background: rgba(255, 255, 255, .5);
+  display: none;
+  text-align: center;
 }
 #loading {
   line-height: 480px;
@@ -112,6 +117,32 @@
   background-color: black;
   color: white;
 }
+.bigbutton {
+  display: inline-block;
+  width: 30%;
+  margin: 20px;
+  padding: 20px;
+  font-size: 30px;
+  height: 60px;
+  line-height: 60px;
+  border: 2px solid black;
+  border-radius: 5px;
+  font-family: sans-serif;
+  color: black;
+  text-decoration: none;
+}
+.bigbutton.start {
+  background: linear-gradient(rgb(128, 255, 128), rgb(0, 128, 0));
+}
+.bigbutton.help {
+  background: linear-gradient(rgb(255, 255, 128), rgb(128, 128, 0));
+}
+.bigbutton.start:active {
+  background: linear-gradient(rgb(32, 128, 32), rgb(100, 192, 100));
+}
+.bigbutton.help:active {
+  background: linear-gradient(rgb(128, 128, 32), rgb(220, 220, 0));
+}
 </style>
 <?php
 function loadScript($script) {
@@ -129,6 +160,18 @@ foreach ($scripts as $script) {
 <div id='fps'></div>
 <div id='camera'></div>
 <div id='loading'>Loading...</div>
+<div id='splash'>
+  <div style='font-weight: bold; font-size: 80px; margin: 30px; font-style: italic'>Golden Lord</div>
+  <div style='display: inline-block; width: 80%; border: 1px solid black; background: rgba(255, 255, 0, .6); padding: 10px; text-align: left'>
+    <center><b>Praise the Golden Lord!</b></center><br/>
+    Your people have lived on an island rich in gold and silver for generations, and they love you
+    greatly. But now, monsters are invading the island! You have stepped down from heaven to protect
+    your worshipers from the invaders, but your divine power depends on the sacrifices of precious
+    metal that your people offer up to your altar.
+  </div>
+  <a onclick='window.GameManager.newLevel()' class='bigbutton start'>Start Game</a>
+  <a onclick='window.GameManager.showHelp()' class='bigbutton help'>Help</a>
+</div>
 <div id='dpad'></div>
 <div id='pauseContainer'></div>
 <div id='buttons'></div>

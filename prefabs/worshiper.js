@@ -136,7 +136,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
   },
 
   onCollisionEnter(other, coll) {
-    if (other.label == 'worshiper') {
+    if (other.bits & this.bits) {
       this.onCollisionStay(other, coll);
     } else if (other.label == 'mine' && other.ready) {
       this.mineValue = other.value;
@@ -168,7 +168,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
   },
 
   onCollisionStay(other, coll) {
-    if (other.label != 'worshiper') {
+    if (!(other.bits & this.bits)) {
       return;
     }
     vectorCache.set(this._origin);

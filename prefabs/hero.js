@@ -74,4 +74,19 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
   lateUpdate(scene) {
     scene.objects.sort(sortObjectsByDepth);
   },
+
+  onCollisionEnter(other, coll) {
+    this.onCollisionStay(other, coll);
+  },
+
+  onCollisionStay(other, coll) {
+    if (!(other.bits & this.bits)) {
+      return;
+    }
+    vectorCache.set(this._origin);
+    vectorCache.subtract(other._origin);
+    vectorCache.normalize();
+    CharacterCore.move(this, 500, vectorCache[0] * .02, vectorCache[1] * .02);
+    this.setRandomDestination();
+  }
 }));
