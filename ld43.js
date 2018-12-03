@@ -39,28 +39,14 @@ assets.load({
     const worshiper = new Sprite(assets.prefabs.worshiper, [0, 0]);
     window.worshipers.push(worshiper);
     do {
-      x = (Math.random() * 320 - 160) | 0;
-      y = (Math.random() * 320 - 160) | 0;
-      worshiper._origin.setXY(x / 32, y / 32);
-    } while (tilemap.computeCollision(worshiper, true) || spawnTooClose(x, y, scene));
+      x = (Math.random() * 16 + 24) | 0;
+      y = (Math.random() * 16 + 24) | 0;
+      worshiper._origin.setXY(x / 2 - 16, y / 2 - 16);
+    } while (tilemap.bitsAt(worshiper._origin) & 1 || 
+        tilemap.bitsAt(worshiper._origin[0], worshiper._origin[1] - 1) & 1 || 
+        spawnTooClose(x, y, scene));
     scene.add(worshiper);
   }
-
-  /*
-  window.coins = [];
-  const coinValues = Object.keys(assets.prefabs.coin.animations);
-  for (let i = 0; i < 10; i++) {
-    const coin = new Sprite(assets.prefabs.coin, [0, 0]);
-    coin.setAnimation(coinValues[(coinValues.length * Math.random()) | 0]);
-    window.coins.push(coin);
-    do {
-      x = (Math.random() * 320 - 160) | 0;
-      y = (Math.random() * 320 - 160) | 0;
-      coin._origin.setXY(x / 32, y / 32);
-    } while (tilemap.computeCollision(coin, true) || spawnTooClose(x, y, scene));
-    scene.add(coin);
-  }
-  */
 
   camera.setScale(2, 2);
 

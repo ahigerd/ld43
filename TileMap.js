@@ -56,7 +56,7 @@ class TileMap extends Sprite {
     }
   }
 
-  bitsAt(x, y, debug) {
+  bitsAt(x, y) {
     if (y === undefined) {
       y = x[1];
       x = x[0];
