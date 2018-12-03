@@ -102,8 +102,8 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
         CharacterCore.move(this, ms, vectorCache[0] * .5, vectorCache[1] * .5);
       }
 
-      if (attackDist < MAX_ATTACK_RANGE && this.attackCooldown <= 0) {
-        const weapon = new Sprite(assets.prefabs.sword);
+      if (attackDist < MAX_ATTACK_RANGE && this.attackCooldown <= 0 && this.blinkTimer <= 0) {
+        const weapon = this.weapon = new Sprite(assets.prefabs.sword);
         weapon.origin.set(this.origin);
         switch (this.lastDir) {
           case 'right': weapon.origin[0] += .2; break;

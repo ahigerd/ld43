@@ -4,7 +4,7 @@ return {
   label: 'coin',
   hitboxes: [new Hitbox(-.2, -.02, .2, -.35, 0x1)],
   defaultIsAnimating: true,
-  defaultAnimationName: 150,
+  defaultAnimationName: 40,
   isTrigger: true,
   isPassive: true,
   animations: {
@@ -23,13 +23,13 @@ return {
     15: new AnimationSequence([
       new AnimationFrame(assets.images.sprites, 96, 0, 16, 16),
     ], 250.0),
-    50: new AnimationSequence([
+    25: new AnimationSequence([
       new AnimationFrame(assets.images.sprites, 32, 0, 16, 16),
       new AnimationFrame(assets.images.sprites, 32, 80, 16, 16),
       new AnimationFrame(assets.images.sprites, 32, 96, 16, 16),
       new AnimationFrame(assets.images.sprites, 32, 80, 16, 16),
     ], 200.0),
-    150: new AnimationSequence([
+    40: new AnimationSequence([
       new AnimationFrame(assets.images.sprites, 48, 0, 16, 16),
       new AnimationFrame(assets.images.sprites, 48, 80, 16, 16),
       new AnimationFrame(assets.images.sprites, 48, 96, 16, 16),
@@ -62,7 +62,13 @@ return {
 
   lateUpdate(scene) {
     if (this.depositing && !this.rising && this.origin[1] > window.altar.lastAabb[1] + .2) {
-      console.log('deposited', this.currentAnimationName);
+      const value = (this.currentAnimationName | 0);
+      hero.health += value;
+      if (hero.health > hero.maxHealth) hero.health = hero.maxHealth;
+      if (this.depositor && !this.depositor.dead) {
+        this.depositor.health += value;
+        if (this.depositor.health > this.depositor.maxHealth) this.depositor.health = this.depositor.maxHealth;
+      }
       scene.remove(this);
     }
   },

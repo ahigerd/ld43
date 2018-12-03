@@ -100,6 +100,15 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
         monster.lastDir = dir;
         monster.setAnimation('stand_' + dir);
         monster.inflict(10);
+        if (monster.weapon) {
+          monster.weapon.origin.set(monster.origin);
+          switch (dir) {
+            case 'right': monster.weapon.origin[0] += .2; break;
+            case 'left': monster.weapon.origin[0] -= .2; break;
+            case 'down': monster.weapon.origin[1] += .2; break;
+            default: monster.weapon.origin[1] -= .2; break;
+          }
+        }
       }
       return;
     }

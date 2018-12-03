@@ -54,9 +54,9 @@ return {
     } else if (dist < 150) {
       this.value = 15;
     } else if (dist < 180) {
-      this.value = 50;
+      this.value = 25;
     } else {
-      this.value = 150;
+      this.value = 40;
     }
 
     this.ready = true;

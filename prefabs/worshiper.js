@@ -150,6 +150,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
       this.targetMine = null;
     } else if (other.label == 'altar') {
       for (const c of this.coinTrail) {
+        c.depositor = this;
         c.depositing = true;
       }
       this.coinTrail.length = 0;
