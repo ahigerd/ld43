@@ -46,6 +46,7 @@ assets.load({
     scene.add(worshiper);
   }
 
+  /*
   window.coins = [];
   const coinValues = Object.keys(assets.prefabs.coin.animations);
   for (let i = 0; i < 10; i++) {
@@ -59,6 +60,7 @@ assets.load({
     } while (tilemap.computeCollision(coin, true) || spawnTooClose(x, y, scene));
     scene.add(coin);
   }
+  */
 
   camera.setScale(2, 2);
 
