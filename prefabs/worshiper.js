@@ -11,6 +11,9 @@ const methods = {
     this.isWandering = false;
     this.destination.setXY(mine.origin[0], mine.origin[1] + .25);
   },
+  setRandomDestination() {
+    this.destination.setXY(this.origin[0] + Math.random() * 2 - 1, this.origin[1] + Math.random() * 2 - 1);
+  },
 };
 
 return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
@@ -67,6 +70,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
     this.targetMine = null;
     this.mineTimer = 0;
     this.destination = new Point(this.origin);
+    this.stuckTimer = 10;
     Object.assign(this, methods);
   },
 
@@ -80,21 +84,36 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
       return;
     } else if (this.isWandering) {
       if (this.destination.distanceTo(this.origin) < .1) {
-        this.destination.setXY(this.origin[0] + Math.random() * 2 - 1, this.origin[1] + Math.random() * 2 - 1);
+        this.setRandomDestination();
       }
     }
     const dx = clamp(this.destination[0] - this.origin[0], -.2, .2);
     const dy = clamp(this.destination[1] - this.origin[1], -.2, .2);
     const speed = this.isWandering ? 1 : 2;
+
+    const ox = this.origin[0];
+    const oy = this.origin[1];
     CharacterCore.move(this, ms, dx * speed, dy * speed);
+    if (Math.abs(this.origin[0] - ox) + Math.abs(this.origin[1] - oy) < .001) {
+      this.stuckTimer--;
+      if (this.stuckTimer <= 0) {
+        console.log('stuck');
+        if (this.targetMine) {
+          this.targetMine.abandon();
+          this.targetMine = null;
+        }
+        this.setRandomDestination();
+      }
+    } else {
+      this.stuckTimer = 10;
+    }
   },
 
   onCollisionEnter(other, coll) {
-    if (other == this.targetMine) {
-      this.targetMine.respawnCounter = Math.random() * 2000 + 4000;
-      this.targetMine.setAnimation('hidden');
-      this.targetMine.ready = false;
-      this.targetMine.worshiper = null;
+    if (other.label == 'worshiper') {
+      this.onCollisionStay(other, coll);
+    } else if (other == this.targetMine) {
+      this.targetMine.deplete();
 
       this.setAnimation('mining');
       this.mineTimer = 2000;
@@ -112,4 +131,12 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
       }
     }
   },
+
+  onCollisionStay(other, coll) {
+    if (other.label != 'worshiper') {
+      return;
+    }
+    this._origin.subtract(coll.penetration);
+    this._origin.subtract(coll.penetration);
+  }
 }));

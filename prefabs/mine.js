@@ -1,5 +1,18 @@
 "use strict";
 
+const methods = {
+  deplete() {
+    this.respawnCounter = Math.random() * 2000 + 4000;
+    this.setAnimation('hidden');
+    this.ready = false;
+    this.worshiper = null;
+  },
+  abandon() {
+    this.worshiper = null;
+    this.retryDelay = 1000;
+  },
+};
+
 return {
   label: 'mine',
   isTrigger: true,
@@ -49,10 +62,16 @@ return {
     this.ready = true;
     this.worshiper = null;
     this.respawnCounter = 0;
+    this.retryDelay = 0;
+    Object.assign(this, methods);
   },
 
   update(scene, ms) {
     if (this.ready) {
+      if (this.retryDelay > 0) {
+        this.retryDelay -= ms;
+        if (this.retryDelay > 0) return;
+      }
       if (!this.worshiper) {
         let nearest = null;
         let nearestDist = Infinity;
