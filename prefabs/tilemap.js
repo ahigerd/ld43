@@ -97,6 +97,7 @@ const CARDINAL_MATCH = {
 };
 
 function tileMatch(p, t, v) {
+  if (p < 0 || p > 4095) return v;
   if (t >= 30) 
     return (tilemap.tiles[p] && tilemap.tiles[p] >= 30) ? v : 0;
   return tilemap.tiles[p] && v;
@@ -143,18 +144,6 @@ return assets.require('scripts/NoiseField.js', 'scripts/TreasureMine.js').then((
     }
   }
 
-  // Water tiles may not border grass tiles
-  for (let sy = 1; sy < 63; sy++) {
-    for (let sx = 1; sx < 63; sx++) {
-      const p = sy * 64 + sx;
-      if (tilemap.tiles[p] != 34) continue;
-      if (tilemap.tiles[p - 1] == 0) tilemap.tiles[p - 1] = 14;
-      if (tilemap.tiles[p + 1] == 0) tilemap.tiles[p + 1] = 14;
-      if (tilemap.tiles[p - 64] == 0) tilemap.tiles[p - 64] = 14;
-      if (tilemap.tiles[p + 64] == 0) tilemap.tiles[p + 64] = 14;
-    }
-  }
-
   // Reachability test: replace inaccessible land with water.
   // This conveniently also makes the outer edge water.
   const reachable = new Uint8Array(64*64).fill(0);
@@ -170,12 +159,24 @@ return assets.require('scripts/NoiseField.js', 'scripts/TreasureMine.js').then((
     }
   }
 
+  // Water tiles may not border grass tiles
+  for (let sy = 0; sy < 64; sy++) {
+    for (let sx = 0; sx < 64; sx++) {
+      const p = sy * 64 + sx;
+      if (tilemap.tiles[p] != 34) continue;
+      if (p > 0    && tilemap.tiles[p - 1] == 0)  tilemap.tiles[p - 1] = 14;
+      if (p < 4095 && tilemap.tiles[p + 1] == 0)  tilemap.tiles[p + 1] = 14;
+      if (p > 64   && tilemap.tiles[p - 64] == 0) tilemap.tiles[p - 64] = 14;
+      if (p < 4032 && tilemap.tiles[p + 64] == 0) tilemap.tiles[p + 64] = 14;
+    }
+  }
+
   // Get fancy with terrain transitions
-  for (let y = 1; y < 63; y++) {
-    for (let x = 1; x < 63; x++) {
+  for (let y = 0; y < 64; y++) {
+    for (let x = 0; x < 64; x++) {
       const p = y * 64 + x;
       const t = tilemap.tiles[p];
-      if (t == 0) continue;
+      if (!t) continue;
       // neighbors
       const n = (
         tileMatch(p - 65, t, 0x01) |
