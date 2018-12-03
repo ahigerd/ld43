@@ -1,5 +1,7 @@
 "use strict";
 
+let state = 'title';
+
 return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => {
   const GameManager = {
     init() {
@@ -14,11 +16,13 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => {
       window.worshipers = [];
 
       engine.addEventListener('enginekeydown', e => e.detail.key === 'Escape' && engine.pause());
-      engine.addEventListener('enginepause', e => pauseCheck.checked = true);
-      engine.addEventListener('enginestart', e => pauseCheck.checked = false);
+      engine.addEventListener('enginepause', this.onPause.bind(this));
+      engine.addEventListener('enginestart', this.onStart.bind(this));
     },
 
     showTitle() {
+      state = 'title';
+
       const scene = window.engine.activeScene = new Scene();
 
       assets.prefabs.tilemap.init();
@@ -35,11 +39,15 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => {
     },
 
     showHelp() {
+      state = 'help';
+
       document.getElementById('splash').style.display = 'none';
       document.getElementById('helppage').style.display = 'block';
     },
 
     newLevel() {
+      state = 'playing';
+
       document.getElementById('splash').style.display = 'none';
       const scene = window.engine.activeScene = new Scene();
 
@@ -83,6 +91,20 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => {
       }
 
       window.engine.start();
+    },
+
+    onPause() {
+      if (state == 'playing') {
+        document.getElementById('pauseBox').style.display = 'block';
+      }
+    },
+
+    onStart() {
+      if (state == 'playing') {
+        document.getElementById('pauseBox').style.display = 'none';
+      } else {
+        engine.pause(false);
+      }
     },
   };
 

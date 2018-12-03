@@ -150,6 +150,31 @@
   text-align: center;
   padding: 6px;
 }
+#pauseBox {
+  background: rgba(255, 255, 128, .9);
+  font-family: sans-serif;
+  text-align: center;
+  display: none;
+  position: absolute;
+  width: 320px;
+  height: 200px;
+  line-height: 200px;
+  border: 1px solid black;
+  top: 140px;
+  left: calc(50% - 160px);
+}
+#pauseBox div {
+  display: inline-block;
+  line-height: initial;
+  vertical-align: middle;
+}
+#pauseBox h1 {
+  animation: blink 2s infinite;
+  font-size: 30px;
+  padding: 0;
+  margin: 0 0 20px;
+  font-weight: bold;
+}
 </style>
 <?php
 function loadScript($script) {
@@ -162,8 +187,6 @@ foreach ($scripts as $script) {
 ?>
 </head>
 <body>
-<input type='checkbox' id='pause' checked />
-<button id='step' onclick='engine.step();pauseCheck.checked=true'>Step</button>
 <div id='fps'></div>
 <div id='camera'></div>
 <div id='loading'>Loading...</div>
@@ -194,6 +217,12 @@ foreach ($scripts as $script) {
   </div>
   <a onclick='window.GameManager.showTitle()' class='bigbutton help'>Back</a>
 </div>
+<div id='pauseBox'>
+  <div>
+    <h1>PAUSED</h1>
+    Press Escape or Pause to continue
+  </div>
+</div>
 <div id='dpad'></div>
 <div id='pauseContainer'></div>
 <div id='buttons'></div>
@@ -202,9 +231,6 @@ const fpsMeter = document.getElementById('fps');
 
 const touchControls = new TouchControls(document.getElementById('dpad'), document.getElementById('buttons'), document.getElementById('pauseContainer'), [{ label: 'A', key: ' ' }]);
 touchControls.onPauseClicked = () => pauseCheck.click();
-
-const pauseCheck = document.getElementById('pause');
-pauseCheck.onclick = () => window.engine.pause(!pauseCheck.checked);
 </script>
 <?php
 loadScript('ld43');
