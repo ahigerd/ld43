@@ -1,8 +1,8 @@
 "use strict";
 
 function sortObjectsByDepth(lhs, rhs) {
-  if (lhs.label == 'coin' && rhs.label != 'coin') return 1;
-  if (rhs.label == 'coin' && lhs.label != 'coin') return -1;
+  if (lhs.label == 'coin' && lhs.depositing && rhs.label != 'coin') return 1;
+  if (rhs.label == 'coin' && rhs.depositing && lhs.label != 'coin') return -1;
   return (lhs.layer - rhs.layer) || (lhs._origin[1] - rhs._origin[1]);
 }
 
