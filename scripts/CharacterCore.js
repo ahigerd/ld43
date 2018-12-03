@@ -2,13 +2,15 @@
 
 const spriteMethods = {
   inflict(damage) {
+    if (this.blinkTimer > 0) return;
     this.health -= damage;
     if (this.health <= 0) {
       this.health = 0;
       this.dead = true;
       // TODO: animation
+    } else {
+      this.blinkTimer = 500;
     }
-    if (this.label == 'hero') console.log(this.health);
   },
   render(camera) {
     if (this.hidden) return;
@@ -31,7 +33,16 @@ return {
     sprite.maxHealth = 100;
     sprite.hidden = false;
     sprite.dead = false;
+    sprite.blinkTimer = 0;
     Object.assign(sprite, spriteMethods);
+    const baseUpdate = sprite.update.bind(sprite);
+    sprite.update = function(scene, ms) {
+      baseUpdate(scene, ms);
+      if (sprite.blinkTimer > 0) {
+        sprite.blinkTimer -= ms;
+        sprite.hidden = sprite.blinkTimer < 0 ? false : (sprite.blinkTimer % 100 < 50);
+      }
+    }
   },
   move(sprite, ms, dx, dy) {
     const moving = dx || dy;
