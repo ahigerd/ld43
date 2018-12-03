@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 <style>
@@ -106,7 +107,7 @@ foreach ($scripts as $script) {
 ?>
 </head>
 <body>
-<input type='checkbox' id='pause' />
+<input type='checkbox' id='pause' checked />
 <button id='step' onclick='engine.step();pauseCheck.checked=true'>Step</button>
 <div id='fps'></div>
 <div id='camera'></div>
@@ -136,7 +137,10 @@ touchControls.onPauseClicked = () => pauseCheck.click();
 
 const pauseCheck = document.getElementById('pause');
 pauseCheck.onclick = () => engine.pause(!pauseCheck.checked);
-window.addEventListener('keydown', e => ((Input.normalize[e.key] || e.key) === 'Escape') && pauseCheck.click());
+
+engine.addEventListener('enginekeydown', e => e.detail.key === 'Escape' && engine.pause());
+engine.addEventListener('enginepause', e => pauseCheck.checked = true);
+engine.addEventListener('enginestart', e => pauseCheck.checked = false);
 </script>
 <?php
 echo "<script src='ld43.js?cb=" . filemtime('ld43.js') . "'></script>\n";

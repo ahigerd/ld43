@@ -38,6 +38,13 @@ const Input = {
 
 class Engine {
   constructor(options = {}) {
+    try {
+      this._eventTarget = new EventTarget();
+    } catch (e) {
+      // MS Edge doesn't support the EventTarget constructor: https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/18274176/
+      this._eventTarget = document.createElement('DIV');
+    }
+
     this._fpsFrames = 0;
     this._fpsSum = 0;
     this.fpsMeter = document.createElement('DIV');
@@ -56,14 +63,22 @@ class Engine {
 
     this.tick = this.tick.bind(this);
 
+    for (const method of ['addEventListener', 'removeEventListener', 'dispatchEvent']) {
+      this[method] = this._eventTarget[method].bind(this.eventTarget);
+    }
+
     this.eventSource = options.eventSource || window;
     this.eventSource.addEventListener('keydown', event => {
-      Input.keys[Input.normalize[event.key] || event.key] = true;
       if (!event.altKey && !event.ctrlKey && !event.metaKey) event.preventDefault();
+      const key = Input.normalize[event.key] || event.key;
+      Input.keys[key] = true;
+      this.dispatchEvent(new CustomEvent('enginekeydown', { detail: { key, altKey: event.altKey, ctrlKey: event.ctrlKey, metaKey: event.metaKey } }));
     });
     this.eventSource.addEventListener('keyup', event => {
-      Input.keys[Input.normalize[event.key] || event.key] = false;
       if (!event.altKey && !event.ctrlKey && !event.metaKey) event.preventDefault();
+      const key = Input.normalize[event.key] || event.key;
+      Input.keys[key] = false;
+      this.dispatchEvent(new CustomEvent('enginekeyup', { detail: { key, altKey: event.altKey, ctrlKey: event.ctrlKey, metaKey: event.metaKey } }));
     });
   }
 
@@ -89,6 +104,7 @@ class Engine {
       return;
     }
     this.timer = window.requestAnimationFrame(this.tick);
+    this.dispatchEvent(new CustomEvent('enginestart'));
   }
 
   pause(on = null) {
@@ -98,8 +114,10 @@ class Engine {
     if (on) {
       this.start();
     } else {
+      const wasRunning = this.running;
       window.cancelAnimationFrame(this.timer);
       this.timer = null;
+      if (wasRunning) this.dispatchEvent(new CustomEvent('enginepause'));
     }
   }
 
@@ -113,6 +131,10 @@ class Engine {
       this._lastTS = timestamp;
       this.timer = window.requestAnimationFrame(this.tick);
       return;
+    }
+    if (document.hidden || !document.hasFocus() || document.visibilityState === 'hidden') {
+      // Automatically pause the game if the browser loses focus
+      this.pause(false);
     }
     let ms;
     if (stepping) {
@@ -140,6 +162,8 @@ class Engine {
     }
     if (this.running) {
       this.timer = window.requestAnimationFrame(this.tick);
+    } else {
+      this.timer = null;
     }
   }
 }
