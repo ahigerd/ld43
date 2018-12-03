@@ -6,7 +6,7 @@
   margin-top: 3em;
   float: right
 }
-#camera, #loading, #splash {
+#camera, #loading, #splash, #helppage {
   width: 640px;
   height: 480px;
   border: 1px solid black;
@@ -14,10 +14,13 @@
   top: 0;
   left: calc(50% - 320px);
 }
-#splash {
+#splash, #helppage {
   background: rgba(255, 255, 255, .5);
   display: none;
   text-align: center;
+}
+#helppage {
+  font-family: sans-serif;
 }
 #loading {
   line-height: 480px;
@@ -123,8 +126,8 @@
   margin: 20px;
   padding: 20px;
   font-size: 30px;
-  height: 60px;
-  line-height: 60px;
+  height: 50px;
+  line-height: 50px;
   border: 2px solid black;
   border-radius: 5px;
   font-family: sans-serif;
@@ -142,6 +145,10 @@
 }
 .bigbutton.help:active {
   background: linear-gradient(rgb(128, 128, 32), rgb(220, 220, 0));
+}
+#helppage td, #helppage tr {
+  text-align: center;
+  padding: 6px;
 }
 </style>
 <?php
@@ -162,7 +169,7 @@ foreach ($scripts as $script) {
 <div id='loading'>Loading...</div>
 <div id='splash'>
   <div style='font-weight: bold; font-size: 80px; margin: 30px; font-style: italic'>Golden Lord</div>
-  <div style='display: inline-block; width: 80%; border: 1px solid black; background: rgba(255, 255, 0, .6); padding: 10px; text-align: left'>
+  <div style='display: inline-block; width: 80%; border: 1px solid black; background: rgba(255, 255, 0, .7); padding: 10px; text-align: left'>
     <center><b>Praise the Golden Lord!</b></center><br/>
     Your people have lived on an island rich in gold and silver for generations, and they love you
     greatly. But now, monsters are invading the island! You have stepped down from heaven to protect
@@ -171,6 +178,21 @@ foreach ($scripts as $script) {
   </div>
   <a onclick='window.GameManager.newLevel()' class='bigbutton start'>Start Game</a>
   <a onclick='window.GameManager.showHelp()' class='bigbutton help'>Help</a>
+</div>
+<div id='helppage'>
+  <div style='font-weight: bold; font-size: 40px; margin: 20px; font-family: sans-serif'>How to Play</div>
+  <div style='display: inline-block; width: 90%; border: 1px solid black; background: rgba(255, 255, 0, .7); padding: 10px; text-align: left'>
+    <table width='100%'>
+      <tr><th align='center' width='20%'>Action</th><th align='center' width='30%'>Keyboard</th><th align='center' width='50%'>Touchscreen</th></tr>
+      <tr><td>Move</td><td>Arrow Keys</td><td>Virtual D-Pad (left side)</td></tr>
+      <tr><td>Attack</td><td>Space Bar</td><td>A Button (right side)</td></tr>
+      <tr><td>Pause</td><td>Escape</td><td>Pause Button (center)</td></tr>
+    </table>
+    <br/>
+    Your worshipers will automatically travel between the mines and your altar to collect treasure and sacrifice it to you.<br/><br/>
+    Sacrifices restore your divine power, automatically allowing you to recover from damage and healing the one to make the offering.
+  </div>
+  <a onclick='window.GameManager.showTitle()' class='bigbutton help'>Back</a>
 </div>
 <div id='dpad'></div>
 <div id='pauseContainer'></div>

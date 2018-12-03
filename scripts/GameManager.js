@@ -29,8 +29,14 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => {
 
       document.getElementById('loading').style.display = 'none';
       document.getElementById('splash').style.display = 'block';
+      document.getElementById('helppage').style.display = 'none';
 
       CharacterCore.centerCameraOn(window.tilemap);
+    },
+
+    showHelp() {
+      document.getElementById('splash').style.display = 'none';
+      document.getElementById('helppage').style.display = 'block';
     },
 
     newLevel() {
