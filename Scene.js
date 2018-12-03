@@ -11,6 +11,7 @@ class Scene {
   }
 
   add(sprite) {
+    sprite.isAsleep = false;
     this.nextObjects.push(sprite);
     this.postUpdate(sprite);
     sprite.scene = this;
@@ -20,6 +21,8 @@ class Scene {
   remove(sprite) {
     sprite.isAsleep = true;
     this.postUpdate(sprite);
+    sprite._collisions.clear();
+    sprite.scene = null;
     let pos = this.objects.indexOf(sprite);
     if (pos >= 0) {
       this.objects.splice(pos, 1);
@@ -111,7 +114,7 @@ class Scene {
     let i, sprite;
     for (i = 0; i < len; ++i) {
       sprite = this.objects[i];
-      if (!sprite.isAsleep) {
+      if (sprite && !sprite.isAsleep) {
         sprite.internalUpdate(this, ms);
       }
     }

@@ -1,6 +1,18 @@
 "use strict";
 
+const spriteMethods = {
+  inflict(damage) {
+    this.health -= damage;
+    if (this.label == 'hero') console.log(this.health);
+  }
+};
+
 return {
+  init(sprite) {
+    sprite.lastDir = 'down';
+    sprite.health = 100;
+    Object.assign(sprite, spriteMethods);
+  },
   move(sprite, ms, dx, dy) {
     const moving = dx || dy;
     if (dy < 0) {

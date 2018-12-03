@@ -1,6 +1,8 @@
 "use strict";
 
 function sortObjectsByDepth(lhs, rhs) {
+  if (lhs.label == 'sword' && rhs.label != 'sword') return 1;
+  if (rhs.label == 'sword' && lhs.label != 'sword') return -1;
   if (lhs.label == 'coin' && lhs.depositing && rhs.label != 'coin') return 1;
   if (rhs.label == 'coin' && rhs.depositing && lhs.label != 'coin') return -1;
   return (lhs.layer - rhs.layer) || (lhs._origin[1] - rhs._origin[1]);
@@ -53,6 +55,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
 
   start() {
     this.lastDir = 'down';
+    CharacterCore.init(this);
     CharacterCore.centerCameraOn(this);
   },
 

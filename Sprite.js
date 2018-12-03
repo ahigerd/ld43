@@ -167,7 +167,7 @@ class Sprite {
 
     const currentAnimation = this.currentAnimation;
     this.currentFrame = currentAnimation ? currentAnimation.frameAt(0) : null;
-    this.isAsleep = false;
+    this.isAsleep = true;
     this.lastAabb = null;
     this.lastHitboxes = [];
     this.isAnimating = config.defaultIsAnimating;

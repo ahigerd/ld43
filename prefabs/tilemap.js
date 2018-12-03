@@ -56,7 +56,7 @@ const tilemap = {
     { x: 6, y: 3, bits: 0 }, // mine T
     { x: 7, y: 3, bits: 0 }, // mine TR
     { x: 5, y: 4, bits: 0 }, // mine L
-    { x: 6, y: 4, bits: 6 }, // mine
+    { x: 6, y: 4, bits: 8|6 }, // mine
     { x: 7, y: 4, bits: 0 }, // mine R
     { x: 5, y: 5, bits: 0 }, // mine BL
     { x: 6, y: 5, bits: 0 }, // mine B

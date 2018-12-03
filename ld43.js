@@ -23,6 +23,7 @@ assets.load({
     altar: 'prefabs/altar.js',
     mine: 'prefabs/mine.js',
     monster: 'prefabs/monster.js',
+    sword: 'prefabs/sword.js',
   },
 }).then(() => {
   window.tilemap = new TileMap(assets.prefabs.tilemap, [-16, -16]);

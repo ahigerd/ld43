@@ -74,6 +74,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
     this.destination = new Point(this.origin);
     this.stuckTimer = 10;
     this.coinTrail = [];
+    CharacterCore.init(this);
     Object.assign(this, methods);
   },
 

@@ -2,23 +2,14 @@
 
 const PLAYER_HATE_RANGE = 2.5;
 const MIN_CHASE_RANGE = .3;
+const MAX_ATTACK_RANGE = .4;
+const MIN_ATTACK_WAIT = 400;
+const ATTACK_WAIT_RANGE = 400;
 
 const vectorCache = new Point(0, 0);
 
-function clamp(x, a, b) {
-  return x < a ? a : (x > b ? b : x);
-}
-
 // TODO: better way of handling this
 const methods = {
-  setTargetMine(mine) {
-    this.targetMine = mine;
-    this.isWandering = false;
-    this.destination.setXY(mine.origin[0], mine.origin[1] + .25);
-  },
-  setRandomDestination() {
-    this.destination.setXY(this.origin[0] + Math.random() * 2 - 1, this.origin[1] + Math.random() * 2 - 1);
-  },
 };
 
 return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
@@ -64,10 +55,24 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
     stand_right: new AnimationSequence([
       new AnimationFrame(assets.images.sprites, 112, 64, 16, 16),
     ], 250.0),
+    attack_down: new AnimationSequence([
+      new AnimationFrame(assets.images.sprites, 96, 80, 16, 16),
+    ], 300.0),
+    attack_up: new AnimationSequence([
+      new AnimationFrame(assets.images.sprites, 112, 80, 16, 16),
+    ], 300.0),
+    attack_left: new AnimationSequence([
+      new AnimationFrame(assets.images.sprites, 128, 80, 16, 16),
+    ], 300.0),
+    attack_right: new AnimationSequence([
+      new AnimationFrame(assets.images.sprites, 144, 80, 16, 16),
+    ], 300.0),
   },
 
   start() {
     this.lastDir = 'down';
+    this.attackCooldown = 0;
+    CharacterCore.init(this);
     Object.assign(this, methods);
   },
   
@@ -85,11 +90,31 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
       }
     }
 
-    if (nearestDist > MIN_CHASE_RANGE) {
-      vectorCache.set(nearest.origin);
-      vectorCache.subtract(this.origin);
-      vectorCache.normalize();
-      CharacterCore.move(this, ms, vectorCache[0] * .5, vectorCache[1] * .5);
+    if (!this.oneShotName) {
+      if (nearestDist > MIN_CHASE_RANGE) {
+        vectorCache.set(nearest.origin);
+        vectorCache.subtract(this.origin);
+        vectorCache.normalize();
+        CharacterCore.move(this, ms, vectorCache[0] * .5, vectorCache[1] * .5);
+      }
+
+      if (nearestDist < MAX_ATTACK_RANGE && this.attackCooldown <= 0) {
+        const weapon = new Sprite(assets.prefabs.sword);
+        weapon.origin.set(this.origin);
+        switch (this.lastDir) {
+          case 'right': weapon.origin[0] += .2; break;
+          case 'left': weapon.origin[0] -= .2; break;
+          case 'down': weapon.origin[1] += .2; break;
+          default: weapon.origin[1] -= .2; break;
+        }
+        weapon.setAnimation(this.lastDir);
+        scene.add(weapon);
+        this.playOneShot('attack_' + this.lastDir);
+        this.attackCooldown = MIN_ATTACK_WAIT + Math.random() * ATTACK_WAIT_RANGE;
+      }
+    } 
+    if (this.attackCooldown > 0) {
+      this.attackCooldown -= ms;
     }
   },
 
