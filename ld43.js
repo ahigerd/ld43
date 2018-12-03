@@ -22,6 +22,7 @@ assets.load({
     coin: 'prefabs/coin.js',
     altar: 'prefabs/altar.js',
     mine: 'prefabs/mine.js',
+    monster: 'prefabs/monster.js',
   },
 }).then(() => {
   window.tilemap = new TileMap(assets.prefabs.tilemap, [-16, -16]);
@@ -46,6 +47,20 @@ assets.load({
         tilemap.bitsAt(worshiper._origin[0], worshiper._origin[1] - 1) & 1 || 
         spawnTooClose(x, y, scene));
     scene.add(worshiper);
+  }
+
+  window.monsters = [];
+  for (let i = 0; i < 10; i++) {
+    const monster = new Sprite(assets.prefabs.monster, [0, 0]);
+    window.monsters.push(monster);
+    do {
+      x = (Math.random() * 64) | 0;
+      y = (Math.random() * 64) | 0;
+      monster._origin.setXY(x / 2 - 16, y / 2 - 16);
+    } while (tilemap.bitsAt(monster._origin) & 9 || 
+        tilemap.bitsAt(monster._origin[0], monster._origin[1] - 1) & 9 || 
+        spawnTooClose(x, y, scene));
+    scene.add(monster);
   }
 
   camera.setScale(2, 2);

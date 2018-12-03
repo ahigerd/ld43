@@ -173,7 +173,10 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
     if (other.label != 'worshiper') {
       return;
     }
-    this._origin.subtract(coll.penetration);
+    vectorCache.set(this._origin);
+    vectorCache.subtract(other._origin);
+    vectorCache.normalize();
+    this.move(vectorCache[0] * .02, vectorCache[1] * .02);
     this.setRandomDestination();
   }
 }));

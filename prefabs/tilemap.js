@@ -3,15 +3,15 @@
 const tilemap = {
   tileTypes: [
     { x: 3, y: 0, bits: 0 }, // grass
-    { x: 5, y: 0, bits: 6 }, // tiles TL
-    { x: 6, y: 0, bits: 4 }, // tiles T
-    { x: 7, y: 0, bits: 6 }, // tiles TR
-    { x: 5, y: 1, bits: 2 }, // tiles L
-    { x: 6, y: 1, bits: 0 }, // tiles
-    { x: 7, y: 1, bits: 2 }, // tiles R
-    { x: 5, y: 2, bits: 6 }, // tiles BL
-    { x: 6, y: 2, bits: 4 }, // tiles B
-    { x: 7, y: 2, bits: 6 }, // tiles BR
+    { x: 5, y: 0, bits: 8|6 }, // tiles TL
+    { x: 6, y: 0, bits: 8|4 }, // tiles T
+    { x: 7, y: 0, bits: 8|6 }, // tiles TR
+    { x: 5, y: 1, bits: 8|2 }, // tiles L
+    { x: 6, y: 1, bits: 8|0 }, // tiles
+    { x: 7, y: 1, bits: 8|2 }, // tiles R
+    { x: 5, y: 2, bits: 8|6 }, // tiles BL
+    { x: 6, y: 2, bits: 8|4 }, // tiles B
+    { x: 7, y: 2, bits: 8|6 }, // tiles BR
     { x: 0, y: 0, bits: 0 }, // dirt TL
     { x: 1, y: 0, bits: 0 }, // dirt T
     { x: 2, y: 0, bits: 0 }, // dirt TR
