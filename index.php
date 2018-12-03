@@ -6,7 +6,7 @@
   margin-top: 3em;
   float: right
 }
-#camera {
+#camera, #loading {
   width: 640px;
   height: 480px;
   border: 1px solid black;
@@ -14,6 +14,18 @@
   top: 0;
   left: calc(50% - 320px);
 }
+#loading {
+  line-height: 480px;
+  text-align: center;
+  font-size: 100px;
+  font-weight: bold;
+  font-family: sans-serif;
+  animation: blink .5s infinite;
+}
+@keyframes blink {
+  0% { color: black; }
+  50% { color: transparent; }
+};
 #camera canvas {
   position: absolute;
   top: 0;
@@ -116,34 +128,18 @@ foreach ($scripts as $script) {
 <button id='step' onclick='engine.step();pauseCheck.checked=true'>Step</button>
 <div id='fps'></div>
 <div id='camera'></div>
+<div id='loading'>Loading...</div>
 <div id='dpad'></div>
 <div id='pauseContainer'></div>
 <div id='buttons'></div>
 <script>
 const fpsMeter = document.getElementById('fps');
 
-const assets = new AssetStore();
-const engine = new Engine({
-  showFps: true,
-});
-const scene = engine.activeScene;
-
-const camera = new Camera(document.getElementById('camera'));
-camera.setXY(10, 7.5);
-camera.layers[0].font = '16px sans-serif';
-camera.layers[0].textAlign = 'center';
-camera.layers[0].textBaseline = 'middle';
-engine.cameras.push(camera);
-
 const touchControls = new TouchControls(document.getElementById('dpad'), document.getElementById('buttons'), document.getElementById('pauseContainer'), [{ label: 'A', key: ' ' }]);
 touchControls.onPauseClicked = () => pauseCheck.click();
 
 const pauseCheck = document.getElementById('pause');
-pauseCheck.onclick = () => engine.pause(!pauseCheck.checked);
-
-engine.addEventListener('enginekeydown', e => e.detail.key === 'Escape' && engine.pause());
-engine.addEventListener('enginepause', e => pauseCheck.checked = true);
-engine.addEventListener('enginestart', e => pauseCheck.checked = false);
+pauseCheck.onclick = () => window.engine.pause(!pauseCheck.checked);
 </script>
 <?php
 loadScript('ld43');

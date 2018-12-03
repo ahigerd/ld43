@@ -1,14 +1,16 @@
 "use strict";
 
-const TreasureMine = {
-  mines: [],
+class TreasureMine {
+  constructor() {
+    window.treasureMine = this;
+    this.mines = [];
+  }
+
   addMine(x, y) {
     const sprite = new Sprite(assets.prefabs.mine, [x, y]); 
-    scene.add(sprite);
+    engine.activeScene.add(sprite);
     this.mines.push({ x, y, sprite });
-  },
+  }
 };
-
-window.TreasureMine = TreasureMine;
 
 return TreasureMine;
