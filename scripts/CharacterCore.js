@@ -7,7 +7,8 @@ const spriteMethods = {
     if (this.health <= 0) {
       this.health = 0;
       this.dead = true;
-      // TODO: animation
+      this.setAnimation('dead');
+      this.blinkTimer = 1000;
     } else {
       this.blinkTimer = 500;
     }
@@ -37,10 +38,28 @@ return {
     Object.assign(sprite, spriteMethods);
     const baseUpdate = sprite.update.bind(sprite);
     sprite.update = function(scene, ms) {
-      baseUpdate(scene, ms);
-      if (sprite.blinkTimer > 0) {
-        sprite.blinkTimer -= ms;
-        sprite.hidden = sprite.blinkTimer < 0 ? false : (sprite.blinkTimer % 100 < 50);
+      if (this.dead) {
+        Sprite.prototype.update.call(this, scene, ms);
+      } else {
+        baseUpdate(scene, ms);
+      }
+      if (this.blinkTimer > 0) {
+        this.blinkTimer -= ms;
+        this.hidden = this.blinkTimer < 0 || this.blinkTimer > 500 ? false : (this.blinkTimer % 100 < 50);
+        if (this.dead && this.blinkTimer < 0) {
+          switch (this.label) {
+            case 'worshiper':
+              worshipers.splice(worshipers.indexOf(this), 1);
+              break;
+            case 'monster':
+              monsters.splice(monsters.indexOf(this), 1);
+              break;
+            case 'hero':
+              GameManager.gameOver();
+              break;
+          }
+          scene.remove(this);
+        }
       }
     }
   },

@@ -67,6 +67,9 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
     attack_right: new AnimationSequence([
       new AnimationFrame(assets.images.sprites, 144, 80, 16, 16),
     ], 300.0),
+    dead: new AnimationSequence([
+      new AnimationFrame(assets.images.sprites, 112, 0, 16, 16),
+    ], 250.0),
   },
 
   start() {

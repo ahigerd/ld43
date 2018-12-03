@@ -60,10 +60,13 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
       new AnimationFrame(assets.images.sprites, 64, 112, 16, 16),
       new AnimationFrame(assets.images.sprites, 64, 112, 16, 16),
     ], 250.0),
+    dead: new AnimationSequence([
+      new AnimationFrame(assets.images.sprites, 144, 0, 16, 16),
+    ], 250.0),
   },
 
   start() {
-    this.lastDir = 'down';
+    this.attackTime = -500;
     CharacterCore.init(this);
     CharacterCore.centerCameraOn(this);
     this.baseRender = this.render;
@@ -85,8 +88,8 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
   },
 
   update(scene, ms) {
+    this.attackTime -= ms;
     if (this.attackTime > 0) {
-      this.attackTime -= ms;
       const radius = (750 - this.attackTime) * .0005 + .25;
       for (const monster of monsters) {
         vectorCache.set(this.origin);
@@ -112,7 +115,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
       }
       return;
     }
-    if (Input.keys[' ']) {
+    if (Input.keys[' '] && this.attackTime < -500) {
       this.playOneShot('attack');
       this.attackTime = 750;
       return;
