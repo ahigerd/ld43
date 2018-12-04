@@ -281,6 +281,7 @@ foreach ($scripts as $script) {
 <div id='dpad'></div>
 <div id='pauseContainer'></div>
 <div id='buttons'></div>
+<audio id='attackSound'><source src='assets/attack.wav' type='audio/wav' /></audio>
 <audio id='damageSound'><source src='assets/damage.wav' type='audio/wav' /></audio>
 <audio id='npcdamageSound'><source src='assets/npcdamage.wav' type='audio/wav' /></audio>
 <audio id='pickupSound'><source src='assets/pickup.wav' type='audio/wav' /></audio>

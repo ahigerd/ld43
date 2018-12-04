@@ -119,6 +119,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
       return;
     }
     if (Input.keys[' '] && this.attackTime < -500) {
+      document.getElementById('attackSound').play();
       this.playOneShot('attack');
       this.attackTime = 750;
       return;

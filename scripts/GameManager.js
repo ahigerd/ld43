@@ -63,7 +63,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => {
     newLevel() {
       state = 'playing';
       window.droppedCoins = [];
-      GameManager.wave = 10;
+      GameManager.wave = 2;
       GameManager.kills = 0;
 
       document.getElementById('splash').style.display = 'none';
