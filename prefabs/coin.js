@@ -64,6 +64,7 @@ return {
     if (this.depositing && !this.rising && this.origin[1] > window.altar.lastAabb[1] + .2) {
       const value = (this.currentAnimationName | 0);
       hero.health += value;
+      GameManager.addScore(value * 10);
       if (hero.health > hero.maxHealth) hero.health = hero.maxHealth;
       if (this.depositor && !this.depositor.dead) {
         this.depositor.health += value;

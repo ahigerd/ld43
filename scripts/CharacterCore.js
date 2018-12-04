@@ -65,9 +65,11 @@ return {
           switch (this.label) {
             case 'worshiper':
               worshipers.splice(worshipers.indexOf(this), 1);
+              document.getElementById('worshipCount').innerText = window.worshipers.length;
               break;
             case 'monster':
               monsters.splice(monsters.indexOf(this), 1);
+              GameManager.addScore(100);
               GameManager.kills++;
               if (GameManager.kills >= GameManager.wave) {
                 GameManager.wave++;

@@ -1,6 +1,16 @@
 "use strict";
 
 let state = 'title';
+let score = 0;
+let highScore;
+try {
+  highScore = localStorage.highScore | 0;
+} catch (e) {
+  highScore = 0;
+}
+const scoreSpan = document.getElementById('score');
+const highScoreSpan = document.getElementById('highScore');
+highScoreSpan.innerText = highScore;
 
 return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => {
   const GameManager = {
@@ -38,6 +48,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => {
       document.getElementById('splash').style.display = 'block';
       document.getElementById('helppage').style.display = 'none';
       document.getElementById('gameOver').style.display = 'none';
+      document.getElementById('statusBar').className = 'onTitle';
 
       CharacterCore.centerCameraOn(window.tilemap);
     },
@@ -57,6 +68,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => {
 
       document.getElementById('splash').style.display = 'none';
       document.getElementById('gameOver').style.display = 'none';
+      document.getElementById('statusBar').className = 'inGame';
       const scene = window.engine.activeScene = new Scene();
 
       assets.prefabs.tilemap.init();
@@ -83,6 +95,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => {
             spawnTooClose(x, y, scene));
         scene.add(worshiper);
       }
+      document.getElementById('worshipCount').innerText = window.worshipers.length;
 
       window.monsters = [];
       for (let i = 0; i < GameManager.wave; i++) {
@@ -126,7 +139,24 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => {
         spawnTooClose(x, y, scene)
       );
       scene.add(monster);
-      console.log('spawn monster at', x, y);
+    },
+
+    addScore(points) {
+      GameManager.setScore(score + points);
+    },
+
+    setScore(points) {
+      score = points;
+      scoreSpan.innerText = points;
+      if (score > highScore) {
+        highScore = score;
+        highScoreSpan.innerText = highScore;
+        try {
+          localStorage.highScore = highScore;
+        } catch (e) {
+          // consume
+        }
+      }
     },
   };
 

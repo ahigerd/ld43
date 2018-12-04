@@ -177,6 +177,42 @@ h1 {
   margin: 0 0 20px;
   font-weight: bold;
 }
+#statusBar {
+  width: 640px;
+  height: 20px;
+  position: absolute;
+  top: 0;
+  left: calc(50% - 319.5px);
+}
+#statusBar div {
+  min-width: 130px;
+  margin: 2px;
+  border: 1px solid white;
+  border-radius: 3px;
+  font-family: sans-serif;
+  font-size: 14px;
+  padding: 4px;
+  color: white;
+  background: #0000a0;
+  font-weight: bold;
+}
+#statusBar.onTitle div {
+  display: none;
+}
+#statusBar.onTitle div.onTitle {
+  display: block;
+}
+#statusBar span {
+  font-weight: normal;
+}
+#statusBar div.left {
+  float: left;
+  text-align: left;
+}
+#statusBar div.right {
+  float: right;
+  text-align: right;
+}
 </style>
 <?php
 function loadScript($script) {
@@ -229,6 +265,17 @@ foreach ($scripts as $script) {
   <div>
     <h1>GAME OVER</h1>
     <a onclick='window.GameManager.showTitle()' class='bigbutton start'>Start Over</a>
+  </div>
+</div>
+<div id='statusBar' class='onTitle'>
+  <div class='left onTitle'>
+    High Score: <span id='highScore'>0</span>
+  </div>
+  <div class='left'>
+    Score: <span id='score'>0</span>
+  </div>
+  <div class='right'>
+    Worshipers: <span id='worshipCount'>0</span>
   </div>
 </div>
 <div id='dpad'></div>
