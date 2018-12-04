@@ -17,22 +17,30 @@ const spriteMethods = {
       this.setAnimation('dead');
       this.blinkTimer = 1000;
       if (this.label === 'worshiper') {
+        document.getElementById('npcdeathSound').play();
         if (this.targetMine) {
           this.targetMine.abandon(false);
         }
         if (this.coinTrail.length > 0) {
           droppedCoins.push(...this.coinTrail.splice(0, this.coinTrail.length));
         }
+      } else if (this.label === 'monster') {
+        document.getElementById('enemydeathSound').play();
+      } else {
+        document.getElementById('playerdeathSound').play();
       }
     } else {
       this.blinkTimer = 500;
       if (this.label === 'worshiper') {
+        document.getElementById('npcdamageSound').play();
         let alarm = hero.danger.alarms.find(a => a.target === this);
         if (!alarm) {
           alarm = { target: this };
           hero.danger.alarms.push(alarm);
         }
         alarm.timer = 500;
+      } else {
+        document.getElementById('damageSound').play();
       }
     }
   },

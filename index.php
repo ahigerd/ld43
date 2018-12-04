@@ -281,6 +281,12 @@ foreach ($scripts as $script) {
 <div id='dpad'></div>
 <div id='pauseContainer'></div>
 <div id='buttons'></div>
+<audio id='damageSound'><source src='assets/damage.wav' type='audio/wav' /></audio>
+<audio id='npcdamageSound'><source src='assets/npcdamage.wav' type='audio/wav' /></audio>
+<audio id='pickupSound'><source src='assets/pickup.wav' type='audio/wav' /></audio>
+<audio id='playerdeathSound'><source src='assets/playerdeath.wav' type='audio/wav' /></audio>
+<audio id='enemydeathSound'><source src='assets/enemydeath.wav' type='audio/wav' /></audio>
+<audio id='npcdeathSound'><source src='assets/npcdeath.wav' type='audio/wav' /></audio>
 <script>
 const fpsMeter = document.getElementById('fps');
 

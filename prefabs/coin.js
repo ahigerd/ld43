@@ -65,6 +65,7 @@ return {
       const value = (this.currentAnimationName | 0);
       hero.health += value;
       GameManager.addScore(value * 10);
+      document.getElementById('pickupSound').play();
       if (hero.health > hero.maxHealth) hero.health = hero.maxHealth;
       if (this.depositor && !this.depositor.dead) {
         this.depositor.health += value;
