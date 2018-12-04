@@ -33,6 +33,7 @@ assets.load({
     mine: 'prefabs/mine.js',
     monster: 'prefabs/monster.js',
     sword: 'prefabs/sword.js',
+    danger: 'prefabs/danger.js',
   },
   require: [
     'scripts/GameManager.js',

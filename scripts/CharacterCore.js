@@ -26,6 +26,16 @@ const spriteMethods = {
       }
     } else {
       this.blinkTimer = 500;
+      console.log(this.label);
+      if (this.label === 'worshiper') {
+        let alarm = hero.danger.alarms.find(a => a.target === this);
+        if (!alarm) {
+          alarm = { target: this };
+          hero.danger.alarms.push(alarm);
+        }
+        alarm.timer = 500;
+        console.log(alarm);
+      }
     }
   },
   render(camera) {

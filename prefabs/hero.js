@@ -71,6 +71,8 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
     CharacterCore.centerCameraOn(this);
     this.baseRender = this.render;
     this.render = assets.prefabs.hero.render;
+    this.danger = new Sprite(assets.prefabs.danger, this.origin);
+    this.scene.add(this.danger);
   },
 
   render(camera) {
@@ -129,6 +131,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
     const moved = CharacterCore.move(this, ms, dx * 1.2, dy * 1.2);
     if (moved) {
       CharacterCore.centerCameraOn(this);
+      this.danger.origin.setXY(this.origin[0], this.origin[1] - .6);
     }
   },
 

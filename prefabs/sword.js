@@ -46,6 +46,7 @@ return {
   onCollisionEnter(other) {
     if (other.label == 'hero' || other.label == 'worshiper') {
       if (other.label == 'hero' && other.attackTime > 0 && other.attackTime < 500) return;
+      if (other.label == 'worshiper' && other.mineTimer > 0) return;
       other.inflict(10);
     }
   },
