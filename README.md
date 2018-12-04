@@ -1,4 +1,4 @@
-![Golden Lord](https://bitbucket.org/ahigerd/ld43/raw/master/goldenlord-title.png)
+![Golden Lord](https://github.com/ahigerd/ld43/raw/master/goldenlord-title.png)
   
 Ludum Dare 43
 -------------
@@ -20,7 +20,7 @@ Controls
 * Attack: Space
 * Pause: Escape
 
-![Screenshot](https://bitbucket.org/ahigerd/ld43/raw/master/goldenlord-ingame.png)
+![Screenshot](https://github.com/ahigerd/ld43/raw/master/goldenlord-ingame.png)
 
 Author's Notes
 --------------
