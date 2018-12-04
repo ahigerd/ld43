@@ -102,7 +102,7 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
         vectorCache.set(nearest.origin);
         vectorCache.subtract(this.origin);
         vectorCache.normalize();
-        CharacterCore.move(this, ms, vectorCache[0] * .5, vectorCache[1] * .5);
+        CharacterCore.move(this, ms, vectorCache[0] * .7, vectorCache[1] * .7);
       }
 
       if (attackDist < MAX_ATTACK_RANGE && this.attackCooldown <= 0 && this.blinkTimer <= 0) {

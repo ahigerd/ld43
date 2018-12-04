@@ -56,7 +56,7 @@ return {
         other.destination.setXY(other.origin[0] + vectorCache[0] * 2, other.origin[1] + vectorCache[1] * 2);
         other.isWandering = false;
       }
-      other.inflict(10);
+      other.inflict(8);
     }
   },
 };
