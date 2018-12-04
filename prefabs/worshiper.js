@@ -156,13 +156,29 @@ return assets.require('scripts/CharacterCore.js').then(([CharacterCore]) => ({
         this.setTargetCoin(coin);
       }
     }
-    const dx = clamp(this.destination[0] - this.origin[0], -.2, .2);
-    const dy = clamp(this.destination[1] - this.origin[1], -.2, .2);
     const speed = this.isWandering ? 1 : 2;
+    let dx = clamp(this.destination[0] - this.origin[0], -.2, .2) * speed;
+    let dy = clamp(this.destination[1] - this.origin[1], -.2, .2) * speed;
+
+    for (const monster of monsters) {
+      vectorCache.set(this.origin);
+      vectorCache.subtract(monster.origin);
+      const mag = vectorCache.magnitude;
+      if (mag < 15) {
+        let repel = Math.sqrt(15 - mag) * .01 / mag;
+        if (repel < 0) repel = 0;
+        dx += vectorCache[0] * repel;
+        dy += vectorCache[1] * repel;
+        if (mag < 1.5) {
+          vectorCache.normalize();
+          this.destination.setXY(this.origin[0] + vectorCache[0] * 2, this.origin[1] + vectorCache[1] * 2);
+        }
+      }
+    }
 
     const ox = this.origin[0];
     const oy = this.origin[1];
-    CharacterCore.move(this, ms, dx * speed, dy * speed);
+    CharacterCore.move(this, ms, dx, dy);
     if (!this.isWandering && Math.abs(this.origin[0] - ox) + Math.abs(this.origin[1] - oy) < .001) {
       this.stuckTimer--;
       if (this.stuckTimer <= 0) {

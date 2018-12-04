@@ -1,5 +1,7 @@
 "use strict";
 
+const vectorCache = new Point(0, 0);
+
 return {
   label: 'sword',
   animateHitboxes: false,
@@ -46,7 +48,14 @@ return {
   onCollisionEnter(other) {
     if (other.label == 'hero' || other.label == 'worshiper') {
       if (other.label == 'hero' && other.attackTime > 0 && other.attackTime < 500) return;
-      if (other.label == 'worshiper' && other.mineTimer > 0) return;
+      if (other.label == 'worshiper') {
+        if (other.mineTimer > 0) return;
+        vectorCache.set(other.origin);
+        vectorCache.subtract(this.origin);
+        vectorCache.normalize();
+        other.destination.setXY(other.origin[0] + vectorCache[0] * 2, other.origin[1] + vectorCache[1] * 2);
+        other.isWandering = false;
+      }
       other.inflict(10);
     }
   },
